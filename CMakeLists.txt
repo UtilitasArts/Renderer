@@ -1,5 +1,5 @@
 # Basic Setup
-cmake_minimum_required(VERSION 4.5)
+cmake_minimum_required(VERSION 4)
 project(Renderer VERSION 1.0 DESCRIPTION "My first SDL3 Graphics" LANGUAGES CXX)
 
 #Add the output path after compiling.
