@@ -2,21 +2,12 @@
 #include <vector>
 #include <string>
 
-using namespace std;
+#include "FixedPointMath.h" 
+
 
 int main()
 {
-	int num1 = 5;
-	int num2 = 10;
-	int sum = num1 + num2;
-
-    vector<string> msg {"Hello", "C++", "World", "from", "VS Code", "and the C++ extension!"};
-
-    for (const string& word : msg)
-    {
-        cout << word << " ";
-    }
-    cout << endl;
-
+	fp_t a = FP_FROM_DECIMAL(3,5);
+	fp_print(a);
 	
 }

@@ -1,0 +1,10 @@
+{
+    "version": 4,
+    "configurePresets": [
+        {
+            "name": "default",
+            "displayName": "Default Build",
+            "binaryDir": "${sourceDir}/build"
+        }
+    ]
+}
