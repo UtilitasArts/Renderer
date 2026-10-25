@@ -16,13 +16,13 @@ add_executable(Renderer src/main.cpp)
 
 #Apple and Linux executable alterations for RPATH
 if(APPLE)
-  set_target_properties(MyGame PROPERTIES
+  set_target_properties(Renderer PROPERTIES
     INSTALL_RPATH "@executable_path;@loader_path"
     BUILD_WITH_INSTALL_RPATH TRUE
     MACOSX_RPATH TRUE
   )
 elseif(UNIX)
-  set_target_properties(MyGame PROPERTIES
+  set_target_properties(Renderer PROPERTIES
     INSTALL_RPATH "$ORIGIN"
     BUILD_WITH_INSTALL_RPATH TRUE
   )
