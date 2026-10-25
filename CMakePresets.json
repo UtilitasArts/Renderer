@@ -6,5 +6,11 @@
             "displayName": "Default Build",
             "binaryDir": "${sourceDir}/build"
         }
+    ],
+    "buildPresets": [
+        {
+            "name": "default",
+            "configurePreset": "default"
+        }
     ]
 }
