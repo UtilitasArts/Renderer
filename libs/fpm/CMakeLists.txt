@@ -1,1 +1,0 @@
-add_library(fpm FixedPointMath.h FixedPointMath.cpp)
