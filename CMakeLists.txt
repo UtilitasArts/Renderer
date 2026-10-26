@@ -62,6 +62,9 @@ external/imgui/imgui_widgets.cpp
 external/imgui/imgui.cpp
 external/imgui/backends/imgui_impl_sdl3.cpp
 external/imgui/backends/imgui_impl_sdlrenderer3.cpp
+external/imgui/backends/imgui_impl_sdlgpu3_shaders.h
+external/imgui/backends/imgui_impl_sdlgpu3.cpp
+external/imgui/backends/imgui_impl_sdlgpu3.h
 )
 
 target_include_directories(imgui PUBLIC 
