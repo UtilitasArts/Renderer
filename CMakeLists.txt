@@ -28,6 +28,7 @@ external/imgui/backends/imgui_impl_sdlrenderer3.cpp
 external/imgui/backends/imgui_impl_sdlgpu3.cpp
 )
 
+
 target_include_directories(Renderer PUBLIC
 libs/fpm
 external/imgui
@@ -57,16 +58,10 @@ add_subdirectory(external/SDL)
 add_subdirectory(external/SDL_image)
 add_subdirectory(external/SDL_ttf)
 
-#Add wxwidgets 
-add_subdirectory(external/wxWidgets)
-
 target_link_libraries(Renderer PUBLIC 
   SDL3::SDL3 
   SDL3_image::SDL3_image 
   SDL3_ttf::SDL3_ttf 
-  wx::net
-  wx::core
-  wx::base
 )
 
 
