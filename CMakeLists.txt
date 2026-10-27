@@ -12,7 +12,27 @@ set(
   "${CMAKE_BINARY_DIR}/bin/$<CONFIGURATION>"
 )
 
-add_executable(Renderer src/main.cpp)
+add_executable(Renderer
+#main-project
+src/main.cpp
+#Fixed Point Math Library
+libs/fpm/FixedPointMath.cpp
+#Imgui Library
+external/imgui/imgui_demo.cpp
+external/imgui/imgui_draw.cpp
+external/imgui/imgui_tables.cpp
+external/imgui/imgui_widgets.cpp
+external/imgui/imgui.cpp
+external/imgui/backends/imgui_impl_sdl3.cpp
+external/imgui/backends/imgui_impl_sdlrenderer3.cpp
+external/imgui/backends/imgui_impl_sdlgpu3.cpp
+)
+
+target_include_directories(Renderer PUBLIC
+libs/fpm
+external/imgui
+external/imgui/backends
+)
 
 #Apple and Linux executable alterations for RPATH
 if(APPLE)
@@ -29,16 +49,6 @@ elseif(UNIX)
 endif()
 
 #Add all liraries to the project.
-# Add the fpm library
-add_library(
-fp
-libs/fpm/FixedPointMath.cpp
-libs/fpm/FixedPointMath.h
-)
-
-target_include_directories(Renderer PUBLIC libs/fpm)
-target_link_libraries(Renderer PUBLIC fp)
-
 # Add the SDL libraries
 set(SDLTTF_VENDORED ON) #Special Variable To add support for certain files. 
 set(SDLIMAGE_AVIF OFF)  #Special Variable To remove support for certain files. 
@@ -51,32 +61,6 @@ target_link_libraries(Renderer PUBLIC
   SDL3_image::SDL3_image 
   SDL3_ttf::SDL3_ttf 
 )
-
-#Add Imgui library
-add_library(
-imgui STATIC
-external/imgui/imgui_demo.cpp
-external/imgui/imgui_draw.cpp
-external/imgui/imgui_tables.cpp
-external/imgui/imgui_widgets.cpp
-external/imgui/imgui.cpp
-external/imgui/backends/imgui_impl_sdl3.cpp
-external/imgui/backends/imgui_impl_sdlrenderer3.cpp
-external/imgui/backends/imgui_impl_sdlgpu3_shaders.h
-external/imgui/backends/imgui_impl_sdlgpu3.cpp
-external/imgui/backends/imgui_impl_sdlgpu3.h
-)
-
-target_include_directories(imgui PUBLIC 
-external/imgui
-external/imgui/backends
-)
-
-target_link_libraries(imgui PUBLIC SDL3::SDL3)
-target_link_libraries(Renderer PUBLIC imgui)
-
-
-
 
 
 
