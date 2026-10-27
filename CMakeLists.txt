@@ -28,7 +28,6 @@ external/imgui/backends/imgui_impl_sdlrenderer3.cpp
 external/imgui/backends/imgui_impl_sdlgpu3.cpp
 )
 
-
 target_include_directories(Renderer PUBLIC
 libs/fpm
 external/imgui
@@ -57,6 +56,10 @@ set(SDLIMAGE_AVIF OFF)  #Special Variable To remove support for certain files.
 add_subdirectory(external/SDL)
 add_subdirectory(external/SDL_image)
 add_subdirectory(external/SDL_ttf)
+
+target_include_directories(Renderer PUBLIC
+  external/SDL/include/SDL3
+)
 
 target_link_libraries(Renderer PUBLIC 
   SDL3::SDL3 
