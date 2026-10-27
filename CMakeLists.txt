@@ -52,15 +52,26 @@ endif()
 # Add the SDL libraries
 set(SDLTTF_VENDORED ON) #Special Variable To add support for certain files. 
 set(SDLIMAGE_AVIF OFF)  #Special Variable To remove support for certain files. 
+
 add_subdirectory(external/SDL)
 add_subdirectory(external/SDL_image)
 add_subdirectory(external/SDL_ttf)
+
+#Add wxwidgets 
+add_subdirectory(external/wxWidgets)
 
 target_link_libraries(Renderer PUBLIC 
   SDL3::SDL3 
   SDL3_image::SDL3_image 
   SDL3_ttf::SDL3_ttf 
+  wx::net
+  wx::core
+  wx::base
 )
+
+
+
+
 
 
 
