@@ -57,9 +57,6 @@ add_subdirectory(external/SDL)
 add_subdirectory(external/SDL_image)
 add_subdirectory(external/SDL_ttf)
 
-target_include_directories(Renderer PUBLIC
-  external/SDL/include/SDL3
-)
 
 target_link_libraries(Renderer PUBLIC 
   SDL3::SDL3 
