@@ -18,13 +18,20 @@ bool InitializeWindow(void) {
     if (!SDL_Init(SDL_INIT_VIDEO)){
         fprintf(stderr,"Unable to initialize SDL\n");
         return false;
-    }
+    }    
+
+  
+    const SDL_DisplayMode* display_mode = SDL_GetCurrentDisplayMode(1);
+    window_width  = display_mode->w;
+    window_height = display_mode->h;   
+
+
     //create a window
-    window = SDL_CreateWindow("Renderer", window_width, window_height, 0);
+    window = SDL_CreateWindow("Renderer", window_width, window_height,0);
     if(!window){ 
     fprintf(stderr,"Error Creating Window"); 
     return false;
-    }
+    }   
 
     //Create SDL renderer
     renderer = SDL_CreateRenderer(window, NULL);        
@@ -66,6 +73,7 @@ void ProcessInput(void) {
     }    
 }
 
+
 void Update(void)
 {
     
@@ -85,7 +93,6 @@ void clear_frame_buffer(uint32_t color){
         }
     }
 }
-
 
 
 void Render(void) {
@@ -114,24 +121,8 @@ int main(void) {
             Update();
             Render();
         }              
-    }
-
-
-
-    // while(GlobalTimer->getElapsedNanoSeconds() < 5 * Nanoseconds) {    
-    //     std::cout << "Elapsed time: " << GlobalTimer->getElapsedNanoSeconds() / (float)Nanoseconds << " seconds" << std::endl;
-
-    //    std::cout << (uint64_t)1000000000/(uint64_t)60 << std::endl;
-
-    // }
-        
-    
+    }  
 
     is_running =InitializeWindow();    
-
-
     return 0;    
-
-
-
 }
