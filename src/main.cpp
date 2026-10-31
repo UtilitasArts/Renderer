@@ -18,13 +18,11 @@ bool InitializeWindow(void) {
     if (!SDL_Init(SDL_INIT_VIDEO)){
         fprintf(stderr,"Unable to initialize SDL\n");
         return false;
-    }    
-
+    }
   
     const SDL_DisplayMode* display_mode = SDL_GetCurrentDisplayMode(1);
     window_width  = display_mode->w;
-    window_height = display_mode->h;   
-
+    window_height = display_mode->h;
 
     //create a window
     window = SDL_CreateWindow("Renderer", window_width, window_height,0);
@@ -32,6 +30,8 @@ bool InitializeWindow(void) {
     fprintf(stderr,"Error Creating Window"); 
     return false;
     }   
+
+    SDL_SetWindowFullscreen(window,true);
 
     //Create SDL renderer
     renderer = SDL_CreateRenderer(window, NULL);        
