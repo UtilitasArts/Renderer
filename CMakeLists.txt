@@ -18,6 +18,7 @@ set(
 add_executable(Renderer
 #main-project
 src/main.cpp
+src/display.cpp
 #Fixed Point Math Library
 libs/fpm/FixedPointMath.cpp
 #Imgui Library
