@@ -15,6 +15,7 @@ SDL_Texture* frame_buffer_texture = NULL;
 uint32_t window_width  = 800;
 uint32_t window_height = 600;
 
+
 bool InitializeWindow(void) {    
     if (!SDL_Init(SDL_INIT_VIDEO)){
         fprintf(stderr,"Unable to initialize SDL\n");
@@ -110,7 +111,7 @@ uint32_t col_select(uint32_t red, uint32_t green, uint32_t blue, uint32_t alpha)
 void draw_grid() {
 
         uint32_t color;         
-        uint32_t cell_width = window_width / 10;  
+        uint32_t cell_width = 400;  
         uint32_t sub_cell_width =   cell_width / 2;   
         uint32_t sub_sub_cell_width =   sub_cell_width / 2;    
 
@@ -128,7 +129,7 @@ void draw_grid() {
             else if( mod_dist(sub_sub_cell_width,1,y) || mod_dist(sub_sub_cell_width,1,x) ) {
                 color = col_select(50,50,50,255);  
             }
-
+            
             frame_buffer[ (window_width*y) + x] = color;            
         }
     }
@@ -139,16 +140,16 @@ void draw_grid_recursive() {
         int32_t value;
         int32_t cell_width;         
 
-        int32_t max_cell_width = window_width / 5;  
-        int32_t subdivs = 6;    
-        int32_t linewidth = 1;     
-
+        const int32_t max_cell_width = 400;  
+        const int32_t subdivs = 4;    
+        const int32_t linewidth = 1;        
+    
         for(int y = 0; y < window_height;y++){
         for(int x = 0; x < window_width; x++) { 
             color = 0xFF000000;              
 
             for(int32_t i = 0; i < subdivs; i++) {  
-                uint32_t powi = pow(2,i);   
+                uint32_t powi = 1 << i;   
                 value      = 255 / powi;  
                 cell_width = max_cell_width / powi;       
 
@@ -162,9 +163,6 @@ void draw_grid_recursive() {
         }
     }
 }
-
-
-
 
 void Render(void) {
     // SDL_SetRenderDrawColor(renderer,255,0,0,255);
