@@ -3,8 +3,6 @@
 
 namespace Time
 {
-
-
 class Timer {
 public:
     Timer() : start_time(std::chrono::steady_clock::now()) {}    
@@ -22,7 +20,6 @@ public:
     private:
 	std::chrono::steady_clock::time_point start_time; 
 };
-
 
 class TimeStepManager{
 public:
