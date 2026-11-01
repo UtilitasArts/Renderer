@@ -2,6 +2,9 @@
 cmake_minimum_required(VERSION 3.23)
 project(Renderer VERSION 1.0 DESCRIPTION "My first SDL3 Graphics" LANGUAGES CXX)
 
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
 #Add the output path after compiling.
 set(
   CMAKE_RUNTIME_OUTPUT_DIRECTORY
