@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <iostream>
 #include <SDL3/SDL.h>
+#include <cmath>
 
 #include "Time.h"
 
@@ -87,20 +88,95 @@ void render_frame_buffer(void) {
 
 void clear_frame_buffer(uint32_t color){
     for(int y = 0; y < window_height;y++){
-        for(int x = 0; x < window_width; x++)
-        {
-            frame_buffer[ (window_width*y) + x] = color;
+        for(int x = 0; x < window_width; x++) {
+
+            frame_buffer[ (window_width*y) + x] = color;            
+        }
+    }
+}
+
+bool mod_dist(int32_t center, int32_t dist, int32_t x){      
+    int32_t half_point = center/2;
+    int32_t distance = half_point - std::abs(half_point - x %center);     
+    return (distance < dist);       
+}
+
+uint32_t col_select(uint32_t red, uint32_t green, uint32_t blue, uint32_t alpha) {
+    uint32_t color = blue+green*256+red*256*256+alpha*256*256*256;
+    return color;
+    
+}
+
+void draw_grid() {
+
+        uint32_t color;         
+        uint32_t cell_width = window_width / 10;  
+        uint32_t sub_cell_width =   cell_width / 2;   
+        uint32_t sub_sub_cell_width =   sub_cell_width / 2;    
+
+        for(int y = 0; y < window_height;y++){
+        for(int x = 0; x < window_width; x++) {
+            
+            color = 0xFF000000;           
+
+            if( mod_dist(cell_width,3,y) || mod_dist(cell_width,3,x) ) {
+               color = col_select(255,255,255,255);               
+            }
+            else if( mod_dist(sub_cell_width,2,y) || mod_dist(sub_cell_width,2,x) ) {
+                color = col_select(150,150,150,255);  
+            }
+            else if( mod_dist(sub_sub_cell_width,1,y) || mod_dist(sub_sub_cell_width,1,x) ) {
+                color = col_select(50,50,50,255);  
+            }
+
+            frame_buffer[ (window_width*y) + x] = color;            
+        }
+    }
+}
+
+void draw_grid_recursive() {
+        int32_t color;     
+        int32_t value;
+        int32_t cell_width;         
+
+        int32_t max_cell_width = window_width / 5;  
+        int32_t subdivs = 5;    
+        int32_t linewidth = 1;     
+
+        for(int y = 0; y < window_height;y++){
+        for(int x = 0; x < window_width; x++) { 
+
+            color = 0xFF000000; 
+            cell_width = window_width / 10;   
+
+            for(int32_t i = 0; i <= subdivs; i++) {
+                uint32_t powi = pow(2,i);   
+                value      = 255 / powi;  
+                cell_width = max_cell_width / powi;       
+
+                if(( mod_dist(cell_width,linewidth,y) || mod_dist(cell_width,linewidth,x)) ) {
+                    color = col_select(value,value,value,255);   
+                    break;   
+                }                      
+            }    
+
+            frame_buffer[ (window_width*y) + x] = color;   
         }
     }
 }
 
 
+
+
 void Render(void) {
-    SDL_SetRenderDrawColor(renderer,255,0,0,255);
-    SDL_RenderClear(renderer);
+    // SDL_SetRenderDrawColor(renderer,255,0,0,255);
+    // SDL_RenderClear(renderer);
+
+    draw_grid_recursive();
 
     render_frame_buffer();
-    clear_frame_buffer(0xFFFFFF00);
+
+    clear_frame_buffer(0xFF000000);
 
     SDL_RenderPresent(renderer);
 }
