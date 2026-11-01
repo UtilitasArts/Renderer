@@ -22,7 +22,7 @@ bool InitializeWindow(void) {
     }
   
     const SDL_DisplayMode* display_mode = SDL_GetCurrentDisplayMode(1);
-    window_width  = display_mode->w;
+    window_width  = display_mode->w ;
     window_height = display_mode->h;
 
     //create a window
@@ -140,25 +140,23 @@ void draw_grid_recursive() {
         int32_t cell_width;         
 
         int32_t max_cell_width = window_width / 5;  
-        int32_t subdivs = 5;    
+        int32_t subdivs = 6;    
         int32_t linewidth = 1;     
 
         for(int y = 0; y < window_height;y++){
         for(int x = 0; x < window_width; x++) { 
+            color = 0xFF000000;              
 
-            color = 0xFF000000; 
-            cell_width = window_width / 10;   
-
-            for(int32_t i = 0; i <= subdivs; i++) {
+            for(int32_t i = 0; i < subdivs; i++) {  
                 uint32_t powi = pow(2,i);   
                 value      = 255 / powi;  
                 cell_width = max_cell_width / powi;       
 
                 if(( mod_dist(cell_width,linewidth,y) || mod_dist(cell_width,linewidth,x)) ) {
-                    color = col_select(value,value,value,255);   
-                    break;   
+                    color = col_select(value,value,value,255); 
+                    break;                    
                 }                      
-            }    
+            }
 
             frame_buffer[ (window_width*y) + x] = color;   
         }
