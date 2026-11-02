@@ -5,6 +5,12 @@
 
 #include "Time.h"
 #include "display.h"
+#include "vector.h"
+
+
+const int32_t n_points = 9*9*9;
+vec3_t cube_points[n_points];
+
 
 bool is_running = false;
 
@@ -12,6 +18,19 @@ void Setup(void) {
     // frame_buffer = (uint32_t*)malloc(sizeof(uint32_t) * window_width * window_height);
     frame_buffer = new uint32_t[window_width * window_height];
     frame_buffer_texture = SDL_CreateTexture(renderer,SDL_PIXELFORMAT_ARGB8888,SDL_TEXTUREACCESS_STREAMING,window_width,window_height);
+
+    uint32_t point_count = 0;
+    for(float x = -1.f; x <= 1.f ; x += 2.f/9.f ){
+        for(float y = -1.f ; y <=1.f ; y += 2.f/9.f ){
+            for(float z = -1.f; z <=1.f ; z += 2.f/9.f ){
+                vec3_t new_point = {x,y,z};    
+                
+                if(point_count < n_points) {
+                    cube_points[point_count++] = new_point;                      
+                }              
+            }            
+        }
+    }
 }
 
 void ProcessInput(void) {
@@ -37,7 +56,9 @@ void Render(void)
     clear_frame_buffer(0xFF000000);
 
     draw_dots();
-    // draw_rect(window_width/2, window_height/2,300,300,col_select(255,255,255,255));
+
+    draw_rect(window_width/2, window_height/2,300,300,col_select(255,255,255,255));
+
     draw_pixel(window_width/2, window_height/2,5,col_select(255,0,0,255));
 
     draw_line(window_width/2,window_height/2,window_width/2 + 100,window_height/2 - 200, 5,col_select(255,0,0,255));
@@ -55,6 +76,8 @@ void Update(void)
 
 int main(void) {      
     is_running = InitializeWindow();
+
+
     Setup();
 
     while(is_running)

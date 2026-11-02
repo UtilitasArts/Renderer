@@ -106,8 +106,7 @@ void draw_pixel(int32_t x, int32_t y, int32_t r, uint32_t color) {
         {
             frame_buffer[ (window_width*y) + x] = color;
         } 
-    }
-   
+    }   
 }
 
 void draw_line(int32_t x, int32_t y, int32_t x2, int32_t y2, int32_t r, uint32_t color) {
