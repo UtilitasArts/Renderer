@@ -29,13 +29,15 @@ void Setup(void) {
                 float ypos = -1.f + (2.f/8.f * (float)y);
                 float zpos = -1.f + (2.f/8.f * (float)z);
 
-                std::cout << xpos << std::endl;
+                
 
                 vec3_t new_point = {.x=xpos, .y=ypos, .z=zpos};                  
-                cube_points[point_count++] = new_point;
+                cube_points[point_count++] = new_point;                
             }            
         }   
     }
+
+
 
     // for(float x = -1.f; x < 1.f ; x += 2.f/9.f ){
     //     for(float y = -1.f ; y < 1.f ; y += 2.f/9.f ){
@@ -72,13 +74,13 @@ vec2_t Project(vec3_t point ){
 void Render(void) { 
 
     draw_dots();
-   for(uint32_t i = 0; i< n_points; i++){
+   for(uint32_t i = 0; i < n_points; i++){
         vec2_t projected_point = projected_points[i]; 
                 
         draw_pixel(projected_point.x + window_width/2,projected_point.y+ window_height/2, 8,col_select(255,255,255,255) );
         // draw_rect(projected_point.x + window_width/2  ,projected_point.y+ window_height/2  ,4,4,col_select(255,255,255,255));
    } 
-
+   
     render_frame_buffer();  
     clear_frame_buffer(0xFF000000);
     SDL_RenderPresent(renderer);
@@ -86,7 +88,7 @@ void Render(void) {
 
 
 void Update(void) {
-    for(int i = 0; i <= n_points; i++){
+    for(int i = 0; i < n_points; i++){
         vec3_t point = cube_points[i];
         vec2_t projected_point = Project(point);
 
