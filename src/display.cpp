@@ -7,8 +7,8 @@ SDL_Renderer* renderer            = NULL;
 uint32_t*    frame_buffer         = NULL;
 SDL_Texture* frame_buffer_texture = NULL;
 
-uint32_t window_width  = 800;
-uint32_t window_height = 600;
+uint32_t window_width  = 1920;
+uint32_t window_height = 1080;
 
 bool InitializeWindow(void)  {    
     if (!SDL_Init(SDL_INIT_VIDEO)){
@@ -17,8 +17,8 @@ bool InitializeWindow(void)  {
     }
 
     const SDL_DisplayMode* display_mode = SDL_GetCurrentDisplayMode(1);
-    window_width  = display_mode->w ;
-    window_height = display_mode->h;
+    // window_width  = display_mode->w ;
+    // window_height = display_mode->h;
 
     //create a window
     window = SDL_CreateWindow("Renderer", window_width, window_height,0);
@@ -27,7 +27,7 @@ bool InitializeWindow(void)  {
     return false;
     }   
 
-    SDL_SetWindowFullscreen(window,true);
+    // SDL_SetWindowFullscreen(window,true);
 
     //Create SDL renderer
     renderer = SDL_CreateRenderer(window, NULL);        
@@ -72,23 +72,54 @@ uint32_t col_select(uint32_t red, uint32_t green, uint32_t blue, uint32_t alpha)
 }
 
 void draw_dots() {
-    int32_t color;    
-    int32_t value = 100;
+    int32_t value = 100;   
     int32_t cell_width = 10;
+    int32_t centerx = window_width>>1;
 
-    const int32_t linewidth = 1;  
-
-        for(int y = 0; y < window_height;y+= 20){
-            for(int x = 0; x < window_width; x+= 20){ 
-                color = 0xFF000000;              
-
-                if(( mod_dist(cell_width,linewidth,y) || mod_dist(cell_width,linewidth,x)) ) {
-                        color = col_select(value,value,value,255);                                            
-                }      
-               
-                frame_buffer[ (window_width*y) + x] = color;              
+    for(int x = cell_width; x <= centerx; x+= cell_width){ 
+        for(int y = cell_width; y < window_height; y+= cell_width){        
+            draw_pixel(x                     , y,1,col_select(value,value,value,255));
+            draw_pixel(centerx + x-cell_width, y,1,col_select(value,value,value,255));                       
         }  
-    }  
+    }      
+}
+
+void draw_pixel(int32_t x, int32_t y, int32_t r, uint32_t color) {   
+    if(r > 1)
+    {
+        for(int i = -r; i < r; i++){    
+            int jmax = sqrt(r*r - i*i );   
+            for(int j = -jmax; j < jmax; j++){            
+                uint32_t curx = i + x ;
+                uint32_t cury = j + y ;  
+
+                if((window_width*cury) + curx <= window_width * window_height)
+                {
+                    frame_buffer[ (window_width*cury) + curx] = color;  
+                }            
+            }      
+        } 
+    }
+    else
+    {
+        if( x < window_width && y < window_height )
+        {
+            frame_buffer[ (window_width*y) + x] = color;
+        } 
+    }
+   
+}
+
+void draw_line(int32_t x, int32_t y, int32_t x2, int32_t y2, int32_t r, uint32_t color) {
+    uint32_t line_length = sqrt((x2-x)*(x2-x) + (y2-y)*(y2-y));
+    float x_step = (float)(x2-x) / (float)line_length;
+    float y_step = (float)(y2-y) / (float)line_length;
+
+    for(int i = 0; i < line_length; i++) {    
+        int32_t curx = x +  x_step * (float)i;
+        int32_t cury = y +  y_step * (float)i;
+        draw_pixel(curx, cury, r, color);      
+    }
 }
 
 void draw_rect(uint32_t x, uint32_t y, uint32_t w, uint32_t h, uint32_t color) {

@@ -31,14 +31,18 @@ void ProcessInput(void) {
 
 void Render(void)
 {
-    SDL_SetRenderDrawColor(renderer,0,0,0,255);
-    SDL_RenderClear(renderer);
-
-    draw_dots();
-    draw_rect(window_width/2, window_height/2,300,300,col_select(255,255,255,255));
-    render_frame_buffer();
+    // SDL_SetRenderDrawColor(renderer,0,0,0,255);
+    // SDL_RenderClear(renderer);
 
     clear_frame_buffer(0xFF000000);
+
+    draw_dots();
+    // draw_rect(window_width/2, window_height/2,300,300,col_select(255,255,255,255));
+    draw_pixel(window_width/2, window_height/2,5,col_select(255,0,0,255));
+
+    draw_line(window_width/2,window_height/2,window_width/2 + 100,window_height/2 - 200, 5,col_select(255,0,0,255));
+
+    render_frame_buffer();  
 
     SDL_RenderPresent(renderer);
 }
