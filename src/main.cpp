@@ -27,9 +27,7 @@ void Setup(void) {
             for(int z = 0; z < 9; z++){                
                 float xpos = -1.f + (2.f/8.f * (float)x);
                 float ypos = -1.f + (2.f/8.f * (float)y);
-                float zpos = -1.f + (2.f/8.f * (float)z);
-
-                
+                float zpos = -1.f + (2.f/8.f * (float)z);               
 
                 vec3_t new_point = {.x=xpos, .y=ypos, .z=zpos};                  
                 cube_points[point_count++] = new_point;                
@@ -67,7 +65,10 @@ void ProcessInput(void) {
 }
 
 vec2_t Project(vec3_t point ){
-    vec2_t projected_point = {.x= fov_factor*point.x,.y=fov_factor*point.y};
+    vec2_t projected_point = { 
+    .x= fov_factor*point.x / point.z,
+    .y= fov_factor*point.y / point.z
+    } ;
     return projected_point;
 }
 
@@ -75,9 +76,9 @@ void Render(void) {
 
     draw_dots();
    for(uint32_t i = 0; i < n_points; i++){
-        vec2_t projected_point = projected_points[i]; 
-                
-        draw_pixel(projected_point.x + window_width/2,projected_point.y+ window_height/2, 8,col_select(255,255,255,255) );
+
+        vec2_t projected_point = projected_points[i];                 
+        draw_pixel(projected_point.x + window_width/2,projected_point.y+ window_height/2, 2,col_select(255,255,255,255) );
         // draw_rect(projected_point.x + window_width/2  ,projected_point.y+ window_height/2  ,4,4,col_select(255,255,255,255));
    } 
    
@@ -90,6 +91,8 @@ void Render(void) {
 void Update(void) {
     for(int i = 0; i < n_points; i++){
         vec3_t point = cube_points[i];
+        point.z += 2;
+
         vec2_t projected_point = Project(point);
 
         projected_points[i] = projected_point;
