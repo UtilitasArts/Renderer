@@ -4,6 +4,7 @@
 
 extern SDL_Window*   window;
 extern SDL_Renderer* renderer;
+
 extern uint32_t*     frame_buffer;
 extern SDL_Texture*  frame_buffer_texture;
 
