@@ -7,10 +7,11 @@
 #include "display.h"
 #include "vector.h"
 
+float fov_factor = 200.f;
 
 const int32_t n_points = 9*9*9;
 vec3_t cube_points[n_points];
-
+vec2_t projected_points[n_points];
 
 bool is_running = false;
 
@@ -20,17 +21,32 @@ void Setup(void) {
     frame_buffer_texture = SDL_CreateTexture(renderer,SDL_PIXELFORMAT_ARGB8888,SDL_TEXTUREACCESS_STREAMING,window_width,window_height);
 
     uint32_t point_count = 0;
-    for(float x = -1.f; x <= 1.f ; x += 2.f/9.f ){
-        for(float y = -1.f ; y <=1.f ; y += 2.f/9.f ){
-            for(float z = -1.f; z <=1.f ; z += 2.f/9.f ){
-                vec3_t new_point = {x,y,z};    
-                
-                if(point_count < n_points) {
-                    cube_points[point_count++] = new_point;                      
-                }              
+
+    for(int x = 0; x < 9; x++){
+         for(int y = 0; y < 9; y++){
+            for(int z = 0; z < 9; z++){                
+                float xpos = -1.f + (2.f/8.f * (float)x);
+                float ypos = -1.f + (2.f/8.f * (float)y);
+                float zpos = -1.f + (2.f/8.f * (float)z);
+
+                std::cout << xpos << std::endl;
+
+                vec3_t new_point = {.x=xpos, .y=ypos, .z=zpos};                  
+                cube_points[point_count++] = new_point;
             }            
-        }
+        }   
     }
+
+    // for(float x = -1.f; x < 1.f ; x += 2.f/9.f ){
+    //     for(float y = -1.f ; y < 1.f ; y += 2.f/9.f ){
+    //         for(float z = -1.f; z < 1.f ; z += 2.f/9.f ){
+    //             vec3_t new_point = {x,y,z};                    
+                
+    //                 cube_points[point_count++] = new_point;    
+    //         }            
+    //     }
+    // }
+
 }
 
 void ProcessInput(void) {
@@ -48,29 +64,34 @@ void ProcessInput(void) {
     }    
 }
 
-void Render(void)
-{
-    // SDL_SetRenderDrawColor(renderer,0,0,0,255);
-    // SDL_RenderClear(renderer);
+vec2_t Project(vec3_t point ){
+    vec2_t projected_point = {.x= fov_factor*point.x,.y=fov_factor*point.y};
+    return projected_point;
+}
 
-    clear_frame_buffer(0xFF000000);
+void Render(void) { 
 
     draw_dots();
-
-    draw_rect(window_width/2, window_height/2,300,300,col_select(255,255,255,255));
-
-    draw_pixel(window_width/2, window_height/2,5,col_select(255,0,0,255));
-
-    draw_line(window_width/2,window_height/2,window_width/2 + 100,window_height/2 - 200, 5,col_select(255,0,0,255));
+   for(uint32_t i = 0; i< n_points; i++){
+        vec2_t projected_point = projected_points[i]; 
+                
+        draw_pixel(projected_point.x + window_width/2,projected_point.y+ window_height/2, 8,col_select(255,255,255,255) );
+        // draw_rect(projected_point.x + window_width/2  ,projected_point.y+ window_height/2  ,4,4,col_select(255,255,255,255));
+   } 
 
     render_frame_buffer();  
-
+    clear_frame_buffer(0xFF000000);
     SDL_RenderPresent(renderer);
 }
 
 
-void Update(void)
-{
+void Update(void) {
+    for(int i = 0; i <= n_points; i++){
+        vec3_t point = cube_points[i];
+        vec2_t projected_point = Project(point);
+
+        projected_points[i] = projected_point;
+    }
     
 }
 

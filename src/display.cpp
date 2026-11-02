@@ -100,11 +100,10 @@ void draw_pixel(int32_t x, int32_t y, int32_t r, uint32_t color) {
             }      
         } 
     }
-    else
+    else 
     {
-        if( x < window_width && y < window_height )
-        {
-            frame_buffer[ (window_width*y) + x] = color;
+        if(x >= 0 && x < window_width && y >= 0 &&  y < window_height ){
+            frame_buffer[(window_width*y) + x] = color;
         } 
     }   
 }
@@ -124,11 +123,9 @@ void draw_line(int32_t x, int32_t y, int32_t x2, int32_t y2, int32_t r, uint32_t
 void draw_rect(uint32_t x, uint32_t y, uint32_t w, uint32_t h, uint32_t color) {
     for(uint32_t i = 0; i < w; i++) {
         for(uint32_t j = 0; j < h; j++) {
-
             uint32_t curx =  i + x - w/2;
-            uint32_t cury =  j + y - h/2;       
-
-            frame_buffer[(window_width * cury) + curx] = color;
+            uint32_t cury =  j + y - h/2;
+            draw_pixel(curx,cury,1,color);
         }
     }
 }
