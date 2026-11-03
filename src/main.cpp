@@ -94,7 +94,6 @@ void Update(void) {
         point.z += 2;
 
         vec2_t projected_point = Project(point);
-
         projected_points[i] = projected_point;
     }
     
