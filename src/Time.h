@@ -26,8 +26,7 @@ public:
     TimeStepManager() {}
 
     void TakeTimeStep() {      
-        FrameTime     = GlobalTimer.getElapsedNanoSeconds();         
-
+        FrameTime     = GlobalTimer.getElapsedNanoSeconds(); 
         if (FrameTime >= MaxFrameTime) {
             FrameTime = MaxFrameTime;
         }     
@@ -43,7 +42,7 @@ public:
     void IncTimeStep() {
         FrameCount++;
         Time        += TimeStep;
-        Accumulator -= TimeStep;       
+        Accumulator -= TimeStep;  
     }    
     
     void UpdateAlpha() {

@@ -93,10 +93,9 @@ void Render(void) {
 
 
 void Update(void) {
-
     using namespace std::numbers;
 
-    cube_rotation.x += (2*pi) / (10.f*60.f);  
+    // cube_rotation.x += (2*pi) / (10.f*60.f);  
     cube_rotation.y += (2*pi) / (3.f*60.f);  
 
     for(int i = 0; i < n_points; i++){
@@ -117,12 +116,13 @@ int main(void) {
 
     while(is_running){
         Time::Manager.TakeTimeStep();        
-        while(Time::Manager.ShouldUpdate()){ 
-            Time::Manager.IncTimeStep();  
-
+        while(Time::Manager.ShouldUpdate()){  
             ProcessInput();
             Update();
             Render();
+            Time::Manager.IncTimeStep();  
+
+            printf("%f \n", Time::Manager.getTimeSeconds());
         }              
     }  
     
