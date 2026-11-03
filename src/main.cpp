@@ -7,11 +7,12 @@
 #include "display.h"
 #include "vector.h"
 
-float fov_factor = 200.f;
+float fov_factor = 640.f;
 
 const int32_t n_points = 9*9*9;
 vec3_t cube_points[n_points];
 vec2_t projected_points[n_points];
+vec3_t camera_position = {0,0,-5};
 
 bool is_running = false;
 
@@ -66,9 +67,11 @@ void ProcessInput(void) {
 
 vec2_t Project(vec3_t point ){
     vec2_t projected_point = { 
-    .x= fov_factor*point.x / point.z,
-    .y= fov_factor*point.y / point.z
-    } ;
+    .x= fov_factor * point.x / point.z,
+    .y= fov_factor * point.y / point.z
+
+    };
+    
     return projected_point;
 }
 
@@ -90,8 +93,9 @@ void Render(void) {
 
 void Update(void) {
     for(int i = 0; i < n_points; i++){
-        vec3_t point = cube_points[i];
-        point.z += 2;
+        vec3_t point = cube_points[i];   
+        
+        point.z -= camera_position.z;
 
         vec2_t projected_point = Project(point);
         projected_points[i] = projected_point;
