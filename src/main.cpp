@@ -36,8 +36,6 @@ void Setup(void) {
         }   
     }
 
-
-
     // for(float x = -1.f; x < 1.f ; x += 2.f/9.f ){
     //     for(float y = -1.f ; y < 1.f ; y += 2.f/9.f ){
     //         for(float z = -1.f; z < 1.f ; z += 2.f/9.f ){
