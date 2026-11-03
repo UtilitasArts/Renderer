@@ -2,6 +2,7 @@
 #include <iostream>
 #include <SDL3/SDL.h>
 #include <cmath>
+#include <numbers>
 
 #include "Time.h"
 #include "display.h"
@@ -13,6 +14,7 @@ const int32_t n_points = 9*9*9;
 vec3_t cube_points[n_points];
 vec2_t projected_points[n_points];
 vec3_t camera_position = {0,0,-5};
+vec3_t cube_rotation   = {0,0,0};
 
 bool is_running = false;
 
@@ -30,11 +32,13 @@ void Setup(void) {
                 float ypos = -1.f + (2.f/8.f * (float)y);
                 float zpos = -1.f + (2.f/8.f * (float)z);               
 
-                vec3_t new_point = {.x=xpos, .y=ypos, .z=zpos};                  
+                vec3_t new_point = {.x=xpos, .y=ypos, .z=zpos};                 
                 cube_points[point_count++] = new_point;                
             }            
         }   
     }
+
+
 
     // for(float x = -1.f; x < 1.f ; x += 2.f/9.f ){
     //     for(float y = -1.f ; y < 1.f ; y += 2.f/9.f ){
@@ -67,7 +71,6 @@ vec2_t Project(vec3_t point ){
     vec2_t projected_point = { 
     .x= fov_factor * point.x / point.z,
     .y= fov_factor * point.y / point.z
-
     };
     
     return projected_point;
@@ -90,11 +93,18 @@ void Render(void) {
 
 
 void Update(void) {
-    for(int i = 0; i < n_points; i++){
-        vec3_t point = cube_points[i];   
-        
-        point.z -= camera_position.z;
 
+    using namespace std::numbers;
+
+    cube_rotation.x += (2*pi) / (10.f*60.f);  
+    cube_rotation.y += (2*pi) / (3.f*60.f);  
+
+    for(int i = 0; i < n_points; i++){
+        vec3_t point = cube_points[i];  
+        
+        point = vec3_rotate(point,cube_rotation);       
+
+        point.z -= camera_position.z;
         vec2_t projected_point = Project(point);
         projected_points[i] = projected_point;
     }
@@ -103,15 +113,11 @@ void Update(void) {
 
 int main(void) {      
     is_running = InitializeWindow();
-
-
     Setup();
 
-    while(is_running)
-    {
+    while(is_running){
         Time::Manager.TakeTimeStep();        
-        while( Time::Manager.ShouldUpdate() )
-        { 
+        while(Time::Manager.ShouldUpdate()){ 
             Time::Manager.IncTimeStep();  
 
             ProcessInput();
