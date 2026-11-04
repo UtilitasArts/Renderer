@@ -81,8 +81,13 @@ void Render(void) {
     draw_dots();
    for(uint32_t i = 0; i < n_points; i++){
 
-        vec2_t projected_point = projected_points[i];                 
-        draw_pixel(projected_point.x + window_width/2,projected_point.y+ window_height/2, 2,col_select(255,255,255,255) );
+        vec2_t projected_point = projected_points[i];         
+        uint32_t color = col_select(255,255,255,255);
+
+        if(Time::Manager.getTimeSeconds() >= 3 && Time::Manager.getTimeSeconds() <= 4 )        {
+            color = col_select(255,0,0,255);
+        }
+        draw_pixel(projected_point.x + window_width/2,projected_point.y+ window_height/2, 2, color );
         // draw_rect(projected_point.x + window_width/2  ,projected_point.y+ window_height/2  ,4,4,col_select(255,255,255,255));
    } 
    
@@ -115,18 +120,19 @@ int main(void) {
     Setup();
 
     while(is_running){
-        Time::Manager.TakeTimeStep();        
+        Time::Manager.TakeTimeStep();
+               
         while(Time::Manager.ShouldUpdate()){  
             ProcessInput();
             Update();
             Render();
-            Time::Manager.IncTimeStep();  
-
-            printf("%f \n", Time::Manager.getTimeSeconds());
+            Time::Manager.IncTimeStep();             
         }              
-    }  
-    
+    }
+
     DestroyWindow();
+
+    printf("GlobalTimer:%f ActualTime%f",Time::Manager.getTimeSeconds(), Time::Manager.ActualTimer.getElapsedSeconds());
 
     return 0;    
 }
