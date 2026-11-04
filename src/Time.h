@@ -46,7 +46,7 @@ static constexpr uint64_t NanoSecond    = 1'000'000'000;
         }    
         
         double UpdateAlpha() {
-            Alpha = double(Accumulator)/double(TimeStep);
+            Alpha = float(Accumulator)/float(TimeStep);
             return Alpha;
         }
 
@@ -78,7 +78,7 @@ static constexpr uint64_t NanoSecond    = 1'000'000'000;
         uint64_t Accumulator = 0;
         uint64_t FrameCount  = 0;
         uint64_t FrameTime   = 0;
-        double   Alpha       = 0; 
+        float    Alpha       = 0; 
 
         static constexpr uint64_t FPS           = 60;            
         static constexpr uint64_t TimeStep      = NanoSecond/FPS;  
