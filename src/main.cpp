@@ -8,25 +8,37 @@
 #include "display.h"
 #include "vector.h"
 
+  //------------------//
+ // Global Variables //
+//==================//
 Timer::TimeStepManager time_manager;
 
-uint64_t prevtime = SDL_GetTicks();
-
-
-float fov_factor = 640.f;
-
+  //-------//
+ // Mesh //
+//======//
 const int32_t n_points = 9*9*9;
 vec3_t cube_points[n_points];
 vec2_t projected_points[n_points];
 
+  //--------//
+ // Camera //
+//========//
 vec3_t camera_position = {0,0,-5};
 vec3_t cube_rotation   = {0,0,0};
+float  fov_factor      = 640.f;
+
 bool is_running = false;
 
+  //-------//
+ // Setup //
+//=======//
 void Setup(void) {    
     frame_buffer = new uint32_t[window_width * window_height];
     frame_buffer_texture = SDL_CreateTexture(renderer,SDL_PIXELFORMAT_ARGB8888,SDL_TEXTUREACCESS_STREAMING,window_width,window_height);
 
+      //-------------//
+     // create cube //
+    //=============//
     uint32_t point_count = 0;
 
     for(int x = 0; x < 9; x++){
@@ -45,6 +57,9 @@ void Setup(void) {
     time_manager.Start();    
 }
 
+  //--------//
+ // Inputs //
+//========//
 void ProcessInput(void) {
     SDL_Event event;
     SDL_PollEvent(&event);
@@ -59,7 +74,9 @@ void ProcessInput(void) {
             break;
     }    
 }
-
+  //---------//
+ // Project //
+//========//
 vec2_t Project(vec3_t point ){
     vec2_t projected_point = { 
     .x= fov_factor * point.x / point.z,
@@ -69,6 +86,9 @@ vec2_t Project(vec3_t point ){
     return projected_point;
 }
 
+  //--------//
+ // Render //
+//========//
 void Render(void) { 
    draw_dots();
    for(uint32_t i = 0; i < n_points; i++){
@@ -77,13 +97,15 @@ void Render(void) {
   
         draw_pixel(projected_point.x + window_width/2,projected_point.y+ window_height/2, 2, color );
         // draw_rect(projected_point.x + window_width/2  ,projected_point.y+ window_height/2  ,4,4,col_select(255,255,255,255));
-   } 
-   
+   }       
     render_frame_buffer();  
     clear_frame_buffer(0xFF000000);
     SDL_RenderPresent(renderer);
 }
 
+  //--------//
+ // update //
+//========//
 void Update(void) {
     using namespace std::numbers; 
 
@@ -94,8 +116,7 @@ void Update(void) {
     } 
       //----------------------------------------------------//
      // We need to create an interpolation here with alpha //
-    //====================================================//
-    
+    //====================================================//    
     for(int i = 0; i < n_points; i++){
         vec3_t point = cube_points[i];         
         point = vec3_rotate(point,cube_rotation);   
@@ -104,7 +125,9 @@ void Update(void) {
         projected_points[i] = projected_point;
     }    
 }
-
+  //---------------//
+ // main function //
+//===============//
 int main(void) {      
     is_running = InitializeWindow();
     Setup(); 
