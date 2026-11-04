@@ -23,8 +23,7 @@ vec3_t camera_position = {0,0,-5};
 vec3_t cube_rotation   = {0,0,0};
 bool is_running = false;
 
-void Setup(void) {
-    // frame_buffer = (uint32_t*)malloc(sizeof(uint32_t) * window_width * window_height);
+void Setup(void) {    
     frame_buffer = new uint32_t[window_width * window_height];
     frame_buffer_texture = SDL_CreateTexture(renderer,SDL_PIXELFORMAT_ARGB8888,SDL_TEXTUREACCESS_STREAMING,window_width,window_height);
 
@@ -42,6 +41,8 @@ void Setup(void) {
             }            
         }   
     }
+
+    time_manager.Start();    
 }
 
 void ProcessInput(void) {
@@ -83,17 +84,21 @@ void Render(void) {
     SDL_RenderPresent(renderer);
 }
 
-
 void Update(void) {
-    using namespace std::numbers;     
-    cube_rotation.x += (2*pi) / 10  * time_manager.fixed_dt;  
-    cube_rotation.y += (2*pi) / 3.0 * time_manager.fixed_dt;  
+    using namespace std::numbers; 
 
+    time_manager.MeasureTimeStep();
+    while(time_manager.IncTimeStep()){ 
+        cube_rotation.x += (2*pi) / 10.0  * time_manager.fixed_dt;  
+        cube_rotation.y += (2*pi) / 3.0 * time_manager.fixed_dt; 
+    } 
+      //----------------------------------------------------//
+     // We need to create an interpolation here with alpha //
+    //====================================================//
+    
     for(int i = 0; i < n_points; i++){
-        vec3_t point = cube_points[i];  
-        
-        point = vec3_rotate(point,cube_rotation);       
-
+        vec3_t point = cube_points[i];         
+        point = vec3_rotate(point,cube_rotation);   
         point.z -= camera_position.z;
         vec2_t projected_point = Project(point);
         projected_points[i] = projected_point;
@@ -103,16 +108,11 @@ void Update(void) {
 int main(void) {      
     is_running = InitializeWindow();
     Setup(); 
-
-    time_manager.Start();       
+         
     while(is_running){  
-
-        time_manager.MeasureTimeStep();
-        while(time_manager.IncTimeStep()){  
-            ProcessInput();
-            Update();   
-            Render();                   
-        }                
+        ProcessInput();        
+        Update();                        
+        Render();                   
     }
 
     DestroyWindow(); 

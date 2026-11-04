@@ -56,7 +56,7 @@ void Timer::TimeStepManager::Start(){
 }
 
 void Timer::TimeStepManager::log(){
-    printf("FixedTime:%f\n RealTime:%f\n Alpha:%f\n Accumulator:%llu",
+    printf("FixedTime:%f\nRealTime:%f\nAlpha:%f\nAccumulator:%llu",
         GetFixedTimeSeconds(),
         WorldTimer.GetElapsedSeconds(),
         Alpha,
