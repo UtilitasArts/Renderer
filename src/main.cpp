@@ -7,19 +7,14 @@
 #include "timer.h"
 #include "display.h"
 #include "vector.h"
+#include "mesh.h"
+#include "triangle.h"
 
   //------------------//
  // Global Variables //
 //==================//
 Timer::TimeStepManager time_manager;
-
-  //-------//
- // Mesh //
-//======//
-const int32_t n_points = 9*9*9;
-vec3_t cube_points[n_points];
-vec2_t projected_points[n_points];
-
+triangle_t triangles_to_render[N_MESH_FACES];
   //--------//
  // Camera //
 //========//
@@ -35,24 +30,6 @@ bool is_running = false;
 void Setup(void) {    
     frame_buffer = new uint32_t[window_width * window_height];
     frame_buffer_texture = SDL_CreateTexture(renderer,SDL_PIXELFORMAT_ARGB8888,SDL_TEXTUREACCESS_STREAMING,window_width,window_height);
-
-      //-------------//
-     // create cube //
-    //=============//
-    uint32_t point_count = 0;
-
-    for(int x = 0; x < 9; x++){
-         for(int y = 0; y < 9; y++){
-            for(int z = 0; z < 9; z++){                
-                float xpos = -1.f + (2.f/8.f * (float)x);
-                float ypos = -1.f + (2.f/8.f * (float)y);
-                float zpos = -1.f + (2.f/8.f * (float)z);               
-
-                vec3_t new_point = {.x=xpos, .y=ypos, .z=zpos};                 
-                cube_points[point_count++] = new_point;                
-            }            
-        }   
-    }
     
     time_manager.Start();    
 }
@@ -92,19 +69,38 @@ vec2_t Project(vec3_t point ){
 //========//
 void Update(void) {
     using namespace std::numbers; 
-    cube_rotation.x += (2*pi) / 10.0  * time_manager.fixed_dt;  
-    cube_rotation.y += (2*pi) / 3.0 * time_manager.fixed_dt; 
+    // cube_rotation.x += (2*pi) / 10.0  * time_manager.fixed_dt;  
+    cube_rotation.y += (2*pi) / 10.0   * time_manager.fixed_dt; 
+    // cube_rotation.z += (2*pi) / 3.0   * time_manager.fixed_dt; 
 
-      //----------------------------------------------------//
-     // We need to create an interpolation here with alpha //
-    //====================================================//  
-    for(int i = 0; i < n_points; i++){
-        vec3_t point = cube_points[i];         
-        point = vec3_rotate(point,cube_rotation);   
-        point.z -= camera_position.z;
-        vec2_t projected_point = Project(point);
-        projected_points[i] = projected_point;
-    }    
+      //------------------------------------------------//
+     // Loop over all the faces or our cubed-mesh      // 
+    //================================================// 
+    for(int32_t i = 0; i < N_MESH_FACES; i++){
+        face_t mesh_face = mesh_faces[i];
+        
+        vec3_t face_vertices[3];
+        face_vertices[0] = mesh_vertices[mesh_face.a -1];
+        face_vertices[1] = mesh_vertices[mesh_face.b -1];
+        face_vertices[2] = mesh_vertices[mesh_face.c -1];
+
+        triangle_t projected_triangle;
+
+        for (int32_t j = 0; j < 3; j++){
+            vec3_t transformed_vertex = face_vertices[j];
+            transformed_vertex    = vec3_rotate(transformed_vertex,cube_rotation);
+            transformed_vertex.z -= camera_position.z;
+
+            vec2_t projected_point = Project(transformed_vertex);
+            
+            projected_point.x  += window_width/2;
+            projected_point.y  += window_height/2;
+            
+            projected_triangle.points[j] = projected_point;
+        }
+
+        triangles_to_render[i] = projected_triangle;
+    }  
 }
 
   //--------//
@@ -112,12 +108,31 @@ void Update(void) {
 //========//
 void Render(void) { 
    draw_dots();
-   for(uint32_t i = 0; i < n_points; i++){
-        vec2_t projected_point = projected_points[i];         
-        uint32_t color = col_select(255,255,255,255);  
-        draw_pixel(projected_point.x + window_width/2,projected_point.y+ window_height/2, 2, color );
-        // draw_rect(projected_point.x + window_width/2  ,projected_point.y+ window_height/2  ,4,4,col_select(255,255,255,255));
-   }       
+   for(int i = 0; i < N_MESH_FACES; i++) {
+        triangle_t triangle = triangles_to_render[i];  
+        uint32_t color = col_select(255,255,0,255); 
+        
+        draw_line(triangle.points[0].x,
+                  triangle.points[0].y,
+                  triangle.points[1].x,
+                  triangle.points[1].y, 4, col_select(255,255,0,255));
+
+        draw_line(triangle.points[1].x,
+                  triangle.points[1].y,
+                  triangle.points[2].x,
+                  triangle.points[2].y, 4,col_select(255,0,255,255));
+
+        draw_line(triangle.points[2].x,
+                  triangle.points[2].y,
+                  triangle.points[0].x,
+                  triangle.points[0].y, 4,col_select(0,255,255,255));
+                  
+
+        draw_pixel(triangle.points[0].x ,triangle.points[0].y, 5, color);
+        draw_pixel(triangle.points[1].x ,triangle.points[1].y, 5, color);
+        draw_pixel(triangle.points[2].x ,triangle.points[2].y, 5, color); 
+   }
+
     render_frame_buffer();  
     clear_frame_buffer(0xFF000000);
     SDL_RenderPresent(renderer);
@@ -132,8 +147,8 @@ int main(void) {
     while(is_running){          
         time_manager.MeasureTimeStep();
         while(time_manager.IncTimeStep()){ 
-            ProcessInput();        
-            Update();                        
+            ProcessInput();  
+            Update();                       
             Render();   
         }   
     }

@@ -21,6 +21,8 @@ src/main.cpp
 src/display.cpp
 src/vector.cpp
 src/timer.cpp
+src/mesh.cpp
+src/triangle.cpp
 #Fixed Point Math Library
 libs/fpm/FixedPointMath.cpp
 #Imgui Library
