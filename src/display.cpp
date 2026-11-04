@@ -34,12 +34,7 @@ bool InitializeWindow(void)  {
     if(!renderer){
         fprintf(stderr,"Error Creating Renderer\n");
         return false;
-    }
-
-    int interval = 0;
-    SDL_GetRenderVSync(renderer, &interval);
-    printf("VSync: %d\n", interval);
- 
+    } 
     return true; 
 }
 

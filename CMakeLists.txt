@@ -20,6 +20,7 @@ add_executable(Renderer
 src/main.cpp
 src/display.cpp
 src/vector.cpp
+src/timer.cpp
 #Fixed Point Math Library
 libs/fpm/FixedPointMath.cpp
 #Imgui Library

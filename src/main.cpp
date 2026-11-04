@@ -4,18 +4,23 @@
 #include <cmath>
 #include <numbers>
 
-#include "Time.h"
+#include "timer.h"
 #include "display.h"
 #include "vector.h"
+
+Timer::TimeStepManager time_manager;
+
+uint64_t prevtime = SDL_GetTicks();
+
 
 float fov_factor = 640.f;
 
 const int32_t n_points = 9*9*9;
 vec3_t cube_points[n_points];
 vec2_t projected_points[n_points];
+
 vec3_t camera_position = {0,0,-5};
 vec3_t cube_rotation   = {0,0,0};
-
 bool is_running = false;
 
 void Setup(void) {
@@ -37,17 +42,6 @@ void Setup(void) {
             }            
         }   
     }
-
-    // for(float x = -1.f; x < 1.f ; x += 2.f/9.f ){
-    //     for(float y = -1.f ; y < 1.f ; y += 2.f/9.f ){
-    //         for(float z = -1.f; z < 1.f ; z += 2.f/9.f ){
-    //             vec3_t new_point = {x,y,z};                    
-                
-    //                 cube_points[point_count++] = new_point;    
-    //         }            
-    //     }
-    // }
-
 }
 
 void ProcessInput(void) {
@@ -75,9 +69,7 @@ vec2_t Project(vec3_t point ){
 }
 
 void Render(void) { 
-
    draw_dots();
-
    for(uint32_t i = 0; i < n_points; i++){
         vec2_t projected_point = projected_points[i];         
         uint32_t color = col_select(255,255,255,255);
@@ -93,10 +85,9 @@ void Render(void) {
 
 
 void Update(void) {
-    using namespace std::numbers;   
-
-    cube_rotation.x += (2*pi) / 10  * Time::Manager.fixed_dt;  
-    cube_rotation.y += (2*pi) / 3.0 * Time::Manager.fixed_dt;  
+    using namespace std::numbers;     
+    cube_rotation.x += (2*pi) / 10  * time_manager.fixed_dt;  
+    cube_rotation.y += (2*pi) / 3.0 * time_manager.fixed_dt;  
 
     for(int i = 0; i < n_points; i++){
         vec3_t point = cube_points[i];  
@@ -111,21 +102,21 @@ void Update(void) {
 
 int main(void) {      
     is_running = InitializeWindow();
-    Setup();
+    Setup(); 
 
-    Time::Manager.Start();       
-    while(is_running){                   
-        while(Time::Manager.TakeTimeStep()){  
+    time_manager.start();       
+    while(is_running){  
+
+        time_manager.MeasureTimeStep();
+        while(time_manager.IncTimeStep()){  
             ProcessInput();
             Update();   
-            Render();  
-            Time::Manager.IncTimeStep();             
-        }   
-                  
+            Render();                   
+        }                     
     }
 
-    DestroyWindow();
-    Time::Manager.Log();
+    DestroyWindow(); 
+    time_manager.log();
 
     return 0;    
 }
