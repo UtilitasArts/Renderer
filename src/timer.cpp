@@ -4,18 +4,18 @@
  // Timer  /
 //========/
 
-uint64_t Timer::Timer::getElapsedNanoSeconds(bool reset) {
+uint64_t Timer::Timer::GetElapsedNanoSeconds(bool reset) {
     auto current_time = std::chrono::steady_clock::now();              
     std::chrono::nanoseconds duration = (current_time - start_time);
     if(reset) start_time = current_time;
     return duration.count();
 }
-double Timer::Timer::getElapsedSeconds(bool bPrint){
-    double elapsedSeconds = ((double)getElapsedNanoSeconds() / (double)NanoSecond);
+double Timer::Timer::GetElapsedSeconds(bool bPrint){
+    double elapsedSeconds = ((double)GetElapsedNanoSeconds() / (double)NanoSecond);
     if(bPrint == 1) printf("Elapsed Seconds = %f",elapsedSeconds );
     return elapsedSeconds;
 }
-void Timer::Timer::start(){
+void Timer::Timer::Start(){
     start_time = std::chrono::steady_clock::now();
 }
 
@@ -24,7 +24,7 @@ void Timer::Timer::start(){
 //==================/
 
 void Timer::TimeStepManager::MeasureTimeStep(){      
-    FrameTime      = FrameTimer.getElapsedNanoSeconds(true); 
+    FrameTime      = FrameTimer.GetElapsedNanoSeconds(true); 
     if (FrameTime >= MaxFrameTime) {          
         FrameTime  = MaxFrameTime;
     }     
@@ -35,34 +35,31 @@ bool Timer::TimeStepManager::IncTimeStep(){
     if(Accumulator >= TimeStep){
         FrameCount  += 1;
         FixedTime   += TimeStep;
-        Accumulator -= TimeStep;
-        
+        Accumulator -= TimeStep;        
         return true;
-    } else return false;
+    }   else {
+        Alpha = double(Accumulator)/double(TimeStep);
+        return false;
+    } 
 }
 
-double Timer::TimeStepManager::UpdateAlpha(){
-    Alpha = double(Accumulator)/double(TimeStep);
-    return Alpha;
-}
-
-double Timer::TimeStepManager::getFixedTimeSeconds(){
+double Timer::TimeStepManager::GetFixedTimeSeconds(){
     return ((double)FixedTime / (double)NanoSecond);
 }
 
-double Timer::TimeStepManager::getFrameTimeSeconds(){
+double Timer::TimeStepManager::GetFrameTimeSeconds(){
     return ((double)FrameTime / (double)NanoSecond);
 }
-void Timer::TimeStepManager::start(){
-    FrameTimer.start();
-    WorldTimer.start();
+void Timer::TimeStepManager::Start(){
+    FrameTimer.Start();
+    WorldTimer.Start();
 }
 
 void Timer::TimeStepManager::log(){
     printf("FixedTime:%f\n RealTime:%f\n Alpha:%f\n Accumulator:%llu",
-        getFixedTimeSeconds(),
-        WorldTimer.getElapsedSeconds(),
-        UpdateAlpha(),
+        GetFixedTimeSeconds(),
+        WorldTimer.GetElapsedSeconds(),
+        Alpha,
         Accumulator
     );
 }

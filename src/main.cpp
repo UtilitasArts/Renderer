@@ -104,7 +104,7 @@ int main(void) {
     is_running = InitializeWindow();
     Setup(); 
 
-    time_manager.start();       
+    time_manager.Start();       
     while(is_running){  
 
         time_manager.MeasureTimeStep();
@@ -112,7 +112,7 @@ int main(void) {
             ProcessInput();
             Update();   
             Render();                   
-        }                     
+        }                
     }
 
     DestroyWindow(); 

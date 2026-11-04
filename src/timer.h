@@ -5,9 +5,9 @@ namespace Timer {
 static constexpr uint64_t NanoSecond    = 1'000'000'000;
     class Timer{
         public:
-            uint64_t  getElapsedNanoSeconds(bool reset = false);
-            double    getElapsedSeconds(bool bPrint = false);
-            void      start();
+            uint64_t  GetElapsedNanoSeconds(bool reset = false);
+            double    GetElapsedSeconds(bool bPrint = false);
+            void      Start();
             
         private:
             std::chrono::steady_clock::time_point start_time;
@@ -16,11 +16,10 @@ static constexpr uint64_t NanoSecond    = 1'000'000'000;
     class TimeStepManager{
         public:   
             void   MeasureTimeStep();
-            bool   IncTimeStep();               
-            double UpdateAlpha();
-            double  getFixedTimeSeconds();
-            double  getFrameTimeSeconds();
-            void   start();
+            bool   IncTimeStep();   
+            double GetFixedTimeSeconds();
+            double GetFrameTimeSeconds();
+            void   Start();
             void   log();
 
             Timer FrameTimer;
