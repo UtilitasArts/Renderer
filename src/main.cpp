@@ -53,7 +53,7 @@ void Setup(void) {
             }            
         }   
     }
-
+    
     time_manager.Start();    
 }
 
@@ -74,6 +74,7 @@ void ProcessInput(void) {
             break;
     }    
 }
+
   //---------//
  // Project //
 //========//
@@ -87,36 +88,16 @@ vec2_t Project(vec3_t point ){
 }
 
   //--------//
- // Render //
-//========//
-void Render(void) { 
-   draw_dots();
-   for(uint32_t i = 0; i < n_points; i++){
-        vec2_t projected_point = projected_points[i];         
-        uint32_t color = col_select(255,255,255,255);
-  
-        draw_pixel(projected_point.x + window_width/2,projected_point.y+ window_height/2, 2, color );
-        // draw_rect(projected_point.x + window_width/2  ,projected_point.y+ window_height/2  ,4,4,col_select(255,255,255,255));
-   }       
-    render_frame_buffer();  
-    clear_frame_buffer(0xFF000000);
-    SDL_RenderPresent(renderer);
-}
-
-  //--------//
  // update //
 //========//
 void Update(void) {
     using namespace std::numbers; 
+    cube_rotation.x += (2*pi) / 10.0  * time_manager.fixed_dt;  
+    cube_rotation.y += (2*pi) / 3.0 * time_manager.fixed_dt; 
 
-    time_manager.MeasureTimeStep();
-    while(time_manager.IncTimeStep()){ 
-        cube_rotation.x += (2*pi) / 10.0  * time_manager.fixed_dt;  
-        cube_rotation.y += (2*pi) / 3.0 * time_manager.fixed_dt; 
-    } 
       //----------------------------------------------------//
      // We need to create an interpolation here with alpha //
-    //====================================================//    
+    //====================================================//  
     for(int i = 0; i < n_points; i++){
         vec3_t point = cube_points[i];         
         point = vec3_rotate(point,cube_rotation);   
@@ -125,21 +106,39 @@ void Update(void) {
         projected_points[i] = projected_point;
     }    
 }
+
+  //--------//
+ // Render //
+//========//
+void Render(void) { 
+   draw_dots();
+   for(uint32_t i = 0; i < n_points; i++){
+        vec2_t projected_point = projected_points[i];         
+        uint32_t color = col_select(255,255,255,255);  
+        draw_pixel(projected_point.x + window_width/2,projected_point.y+ window_height/2, 2, color );
+        // draw_rect(projected_point.x + window_width/2  ,projected_point.y+ window_height/2  ,4,4,col_select(255,255,255,255));
+   }       
+    render_frame_buffer();  
+    clear_frame_buffer(0xFF000000);
+    SDL_RenderPresent(renderer);
+}
+
   //---------------//
  // main function //
 //===============//
 int main(void) {      
     is_running = InitializeWindow();
-    Setup(); 
-         
-    while(is_running){  
-        ProcessInput();        
-        Update();                        
-        Render();                   
+    Setup();              
+    while(is_running){          
+        time_manager.MeasureTimeStep();
+        while(time_manager.IncTimeStep()){ 
+            ProcessInput();        
+            Update();                        
+            Render();   
+        }   
     }
 
     DestroyWindow(); 
     time_manager.log();
-
     return 0;    
 }
