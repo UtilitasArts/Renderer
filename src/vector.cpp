@@ -32,7 +32,6 @@ vec3_t vec3_rotate(vec3_t v, Axis axis, float angle){
         .z = v.z        
         };
     }
-
     return rotated_vector;
 }
 
@@ -46,14 +45,4 @@ vec3_t vec3_rotate(vec3_t v,vec3_t angles){
 
 void vec3_print(vec3_t v){
     printf("%f, %f, %f \n", v.x, v.y, v.z);
-}
-
-
-vec3_t vec3_rotate_y(vec3_t v, float angle) {
-    vec3_t rotated_vector = {
-        .x = v.x * cos(angle) - v.z * sin(angle),
-        .y = v.y,
-        .z = v.x * sin(angle) + v.z * cos(angle)
-    };
-    return rotated_vector;
 }

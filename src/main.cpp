@@ -76,15 +76,12 @@ vec2_t Project(vec3_t point ){
 
 void Render(void) { 
 
-    draw_dots();
-   for(uint32_t i = 0; i < n_points; i++){
+   draw_dots();
 
+   for(uint32_t i = 0; i < n_points; i++){
         vec2_t projected_point = projected_points[i];         
         uint32_t color = col_select(255,255,255,255);
-
-        if(Time::Manager.getFixedTimeSeconds() >= 3 && Time::Manager.getFixedTimeSeconds() <= 4 )        {
-            color = col_select(255,0,0,255);
-        }
+  
         draw_pixel(projected_point.x + window_width/2,projected_point.y+ window_height/2, 2, color );
         // draw_rect(projected_point.x + window_width/2  ,projected_point.y+ window_height/2  ,4,4,col_select(255,255,255,255));
    } 
@@ -96,11 +93,10 @@ void Render(void) {
 
 
 void Update(void) {
-    using namespace std::numbers;
-    using namespace Time;
+    using namespace std::numbers;   
 
-    cube_rotation.x += (2*pi) / 10  * fixed_dt;  
-    cube_rotation.y += (2*pi) / 3.0 * fixed_dt;  
+    cube_rotation.x += (2*pi) / 10  * Time::Manager.fixed_dt;  
+    cube_rotation.y += (2*pi) / 3.0 * Time::Manager.fixed_dt;  
 
     for(int i = 0; i < n_points; i++){
         vec3_t point = cube_points[i];  
@@ -120,13 +116,12 @@ int main(void) {
     Time::Manager.Start();       
     while(is_running){                   
         while(Time::Manager.TakeTimeStep()){  
-
             ProcessInput();
-            Update();
-            Render();
-
+            Update();   
+            Render();  
             Time::Manager.IncTimeStep();             
-        }              
+        }   
+                  
     }
 
     DestroyWindow();

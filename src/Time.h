@@ -2,12 +2,7 @@
 #include <chrono>
 
 namespace Time {
-
-    static constexpr uint64_t FPS           = 60;    
-    static constexpr uint64_t NanoSecond    = 1'000'000'000;
-    static constexpr uint64_t TimeStep      = NanoSecond/FPS;  
-    static constexpr uint64_t MaxFrameTime  = TimeStep * 25;
-    static constexpr double   fixed_dt      = 1.0/(double)FPS;
+static constexpr uint64_t NanoSecond    = 1'000'000'000;
 
     class Timer {
     public:
@@ -45,7 +40,7 @@ namespace Time {
         }
 
         void IncTimeStep() {
-            FrameCount++;
+            FrameCount  += 1;
             FixedTime   += TimeStep;
             Accumulator -= TimeStep;  
         }    
@@ -58,6 +53,10 @@ namespace Time {
         float getFixedTimeSeconds(){
             return ((float)FixedTime / (float)NanoSecond);
         }    
+
+        float getFrameTimeSeconds(){
+            return ((float)FrameTime / (float)NanoSecond);
+        } 
 
         void Start(){
             FrameTimer.Start();
@@ -80,6 +79,11 @@ namespace Time {
         uint64_t FrameCount  = 0;
         uint64_t FrameTime   = 0;
         double   Alpha       = 0; 
+
+        static constexpr uint64_t FPS           = 60;            
+        static constexpr uint64_t TimeStep      = NanoSecond/FPS;  
+        static constexpr uint64_t MaxFrameTime  = TimeStep * 25;
+        static constexpr double   fixed_dt      = 1.0/(double)FPS;
     };
 
     class TimeStepManager Manager;
