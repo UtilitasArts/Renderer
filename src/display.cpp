@@ -1,6 +1,7 @@
 #include "display.h"
 #include <iostream>
 #include <cmath>
+#include <algorithm>
 
 SDL_Window*   window              = NULL;
 SDL_Renderer* renderer            = NULL;
@@ -108,17 +109,88 @@ void draw_pixel(int32_t x, int32_t y, int32_t r, uint32_t color) {
     }   
 }
 
-void draw_line(int32_t x, int32_t y, int32_t x2, int32_t y2, int32_t r, uint32_t color) {
-    uint32_t line_length = sqrt((x2-x)*(x2-x) + (y2-y)*(y2-y));
-    float x_step = (float)(x2-x) / (float)line_length;
-    float y_step = (float)(y2-y) / (float)line_length;
+void draw_line_low(int32_t x0, int32_t y0, int32_t x1, int32_t y1, int32_t r, uint32_t color){
+    if (x0 > x1) {
+        std::swap(x0, x1);
+        std::swap(y0, y1);
+    }  
+    int dx = x1-x0;
+    int dy = y1-y0;    
+    
+    int yi = 1;
+    if(dy < 0) {
+        yi  = -1;
+        dy *= -1;
+    }
 
-    for(int i = 0; i < line_length; i++) {    
-        int32_t curx = x +  x_step * (float)i;
-        int32_t cury = y +  y_step * (float)i;
-        draw_pixel(curx, cury, r, color);      
+    int D  = 2*dy - dx;
+    int y  = y0;
+
+    for(int x = x0; x <= x1 ;x++){
+        draw_pixel(x, y, r, color);
+        if (D > 0){
+            y = y + yi;
+            D += 2*(dy-dx);
+        } else {
+            D += 2*dy;
+        }
     }
 }
+
+void draw_line_high(int32_t x0, int32_t y0, int32_t x1, int32_t y1, int32_t r, uint32_t color){
+    if (y0 > y1) {
+        std::swap(x0, x1);
+        std::swap(y0, y1);
+    }    
+    int dx = x1-x0;
+    int dy = y1-y0;
+
+    int xi = 1;
+    if(dx < 0) {
+        xi  = -1;
+        dx *= -1;
+    }
+
+    int D  = 2*dx - dy;
+    int x  = x0;
+
+    for(int y = y0; y <= y1 ;y++){
+        draw_pixel(x, y, r, color);
+        if (D > 0){
+            x = x + xi;
+            D += 2*(dx-dy);
+        } else {
+            D += 2*dx;
+        }
+    }
+}
+
+
+void draw_line(int32_t x0, int32_t y0, int32_t x1, int32_t y1, int32_t r, uint32_t color){
+    if(abs(y1-y0) < abs(x1-x0)){
+        draw_line_low(x0, y0, x1, y1,r,color);
+    } else {
+        draw_line_high(x0, y0, x1, y1,r,color);
+    }
+}
+
+
+
+
+
+
+
+// void draw_line(int32_t x, int32_t y, int32_t x2, int32_t y2, int32_t r, uint32_t color) {
+//     uint32_t line_length = sqrt((x2-x)*(x2-x) + (y2-y)*(y2-y));
+//     float x_step = (float)(x2-x) / (float)line_length;
+//     float y_step = (float)(y2-y) / (float)line_length;
+
+//     for(int i = 0; i < line_length; i++) {    
+//         int32_t curx = x +  x_step * (float)i;
+//         int32_t cury = y +  y_step * (float)i;
+//         draw_pixel(curx, cury, r, color);      
+//     }
+// }
 
 void draw_rect(uint32_t x, uint32_t y, uint32_t w, uint32_t h, uint32_t color) {
     for(uint32_t i = 0; i < w; i++) {

@@ -108,6 +108,10 @@ void Update(void) {
 //========//
 void Render(void) { 
    draw_dots();
+   
+//    draw_line(100,500,700,0,1,col_select(255,255,255,255));
+//    draw_line(100,500,1500,600,1,col_select(255,255,255,255));
+
    for(int i = 0; i < N_MESH_FACES; i++) {
         triangle_t triangle = triangles_to_render[i];  
         uint32_t color = col_select(255,255,0,255); 
@@ -115,17 +119,17 @@ void Render(void) {
         draw_line(triangle.points[0].x,
                   triangle.points[0].y,
                   triangle.points[1].x,
-                  triangle.points[1].y, 4, col_select(255,255,0,255));
+                  triangle.points[1].y, 3, col_select(255,255,0,255));
 
         draw_line(triangle.points[1].x,
                   triangle.points[1].y,
                   triangle.points[2].x,
-                  triangle.points[2].y, 4,col_select(255,0,255,255));
+                  triangle.points[2].y, 3,col_select(255,0,255,255));
 
         draw_line(triangle.points[2].x,
                   triangle.points[2].y,
                   triangle.points[0].x,
-                  triangle.points[0].y, 4,col_select(0,255,255,255));
+                  triangle.points[0].y, 3,col_select(0,255,255,255));
                   
 
         draw_pixel(triangle.points[0].x ,triangle.points[0].y, 5, color);
