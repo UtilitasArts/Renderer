@@ -85,6 +85,10 @@ void draw_dots() {
     }      
 }
 
+  //----------------//
+ // Drawing Pixels //
+//================//
+
 void draw_pixel(int32_t x, int32_t y, int32_t r, uint32_t color) {   
     if(r > 1)
     {
@@ -109,7 +113,10 @@ void draw_pixel(int32_t x, int32_t y, int32_t r, uint32_t color) {
     }   
 }
 
-void draw_line_low(int32_t x0, int32_t y0, int32_t x1, int32_t y1, int32_t r, uint32_t color){
+  //---------------------------//
+ // Bresenam's Line Algorithm //
+//===========================//
+void draw_line_low_angle(int32_t x0, int32_t y0, int32_t x1, int32_t y1, int32_t r, uint32_t color){
     if (x0 > x1) {
         std::swap(x0, x1);
         std::swap(y0, y1);
@@ -137,11 +144,12 @@ void draw_line_low(int32_t x0, int32_t y0, int32_t x1, int32_t y1, int32_t r, ui
     }
 }
 
-void draw_line_high(int32_t x0, int32_t y0, int32_t x1, int32_t y1, int32_t r, uint32_t color){
+void draw_line_high_angle(int32_t x0, int32_t y0, int32_t x1, int32_t y1, int32_t r, uint32_t color){
     if (y0 > y1) {
         std::swap(x0, x1);
         std::swap(y0, y1);
-    }    
+    }
+
     int dx = x1-x0;
     int dy = y1-y0;
 
@@ -155,6 +163,7 @@ void draw_line_high(int32_t x0, int32_t y0, int32_t x1, int32_t y1, int32_t r, u
     int x  = x0;
 
     for(int y = y0; y <= y1 ;y++){
+        
         draw_pixel(x, y, r, color);
         if (D > 0){
             x = x + xi;
@@ -165,33 +174,21 @@ void draw_line_high(int32_t x0, int32_t y0, int32_t x1, int32_t y1, int32_t r, u
     }
 }
 
-
 void draw_line(int32_t x0, int32_t y0, int32_t x1, int32_t y1, int32_t r, uint32_t color){
     if(abs(y1-y0) < abs(x1-x0)){
-        draw_line_low(x0, y0, x1, y1,r,color);
+
+        draw_line_low_angle(x0, y0, x1, y1,r,color);
+
     } else {
-        draw_line_high(x0, y0, x1, y1,r,color);
+
+        draw_line_high_angle(x0, y0, x1, y1,r,color);
+
     }
-}
+}    
 
-
-
-
-
-
-
-// void draw_line(int32_t x, int32_t y, int32_t x2, int32_t y2, int32_t r, uint32_t color) {
-//     uint32_t line_length = sqrt((x2-x)*(x2-x) + (y2-y)*(y2-y));
-//     float x_step = (float)(x2-x) / (float)line_length;
-//     float y_step = (float)(y2-y) / (float)line_length;
-
-//     for(int i = 0; i < line_length; i++) {    
-//         int32_t curx = x +  x_step * (float)i;
-//         int32_t cury = y +  y_step * (float)i;
-//         draw_pixel(curx, cury, r, color);      
-//     }
-// }
-
+  //----------------//
+ // Drawing Shapes //
+//================//
 void draw_rect(uint32_t x, uint32_t y, uint32_t w, uint32_t h, uint32_t color) {
     for(uint32_t i = 0; i < w; i++) {
         for(uint32_t j = 0; j < h; j++) {

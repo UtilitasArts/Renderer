@@ -71,7 +71,7 @@ void Update(void) {
     using namespace std::numbers; 
     // cube_rotation.x += (2*pi) / 10.0  * time_manager.fixed_dt;  
     cube_rotation.y += (2*pi) / 10.0   * time_manager.fixed_dt; 
-    // cube_rotation.z += (2*pi) / 3.0   * time_manager.fixed_dt; 
+    cube_rotation.z += (2*pi) / 3.0    * time_manager.fixed_dt; 
 
       //------------------------------------------------//
      // Loop over all the faces or our cubed-mesh      // 
