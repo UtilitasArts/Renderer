@@ -67,15 +67,26 @@ void load_obj_file_data(const char *filename) {
     
     fs::path FilePath = Folder.parent_path().string() + "/assets/" + std::string(filename) + ".obj";  
 
-    if(FilePath.has_filename()) {
-        std::cout << "File Name: " << FilePath.filename().string() << std::endl;
+    if(!FilePath.has_filename()) {
+        std::cout << "No such file In Asset Folder: " << std::endl;       
+        return;
+    }
+    else{
+         std::cout << "File Name: " << FilePath.filename().string() << std::endl;
     }
 
+    std::ifstream File;    
+    File.open(FilePath);
+
+    std::string Content;
+
+    while(std::getline(File,Content)) {
+        std::cout << Content << std::endl;
+      
+    }
     
 
-    // std::fstream File;
-
-    // File.open(filename);
+    File.close();
 
 
 
