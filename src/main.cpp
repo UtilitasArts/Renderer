@@ -20,7 +20,7 @@ std::vector<triangle_t> triangles_to_render;
   //--------//
  // Camera //
 //========//
-vec3_t camera_position = {0,0,-5};
+vec3_t camera_position = {0,0,-3};
 vec3_t cube_rotation   = {0,0,0};
 
 float  fov_factor      = 640.f;
@@ -34,10 +34,12 @@ void Setup(void) {
     frame_buffer = new uint32_t[window_width * window_height];
     frame_buffer_texture = SDL_CreateTexture(renderer,SDL_PIXELFORMAT_ARGB8888,SDL_TEXTUREACCESS_STREAMING,window_width,window_height);
     
-    time_manager.Start();    
+    
 
-    load_cube_mesh_data();
+    // load_cube_mesh_data();
     load_obj_file_data("RubberToyTriangulated");
+
+    time_manager.Start();   
 }
 
   //--------//
@@ -66,6 +68,8 @@ vec2_t Project(vec3_t point ){
     .x= fov_factor * point.x / point.z,
     .y= fov_factor * point.y / point.z
     };
+
+    // projected_point.y *= -1;
     
     return projected_point;
 }
@@ -77,7 +81,7 @@ void Update(void) {
     using namespace std::numbers; 
     // cube_rotation.x += (2*pi) / 10.0  * time_manager.fixed_dt;  
     mesh.rotation.y += (2*pi) / 10.0   * time_manager.fixed_dt; 
-    mesh.rotation.z += (2*pi) / 30.0   * time_manager.fixed_dt; 
+    // mesh.rotation.z += (2*pi) / 5.0   * time_manager.fixed_dt; 
 
       //--------------------------------------//
      // Loop over all the faces or our mesh  // 
@@ -132,7 +136,7 @@ void Render(void) {
    for(int i = 0; i < triangles_to_render.size(); i++) {
         triangle_t triangle = triangles_to_render[i];
         uint32_t color = col_select(255,255,0,255);         
-        draw_triangle(triangle, 1, color, true);
+        draw_triangle(triangle, 1, color);
    }
    
    triangles_to_render.clear();
