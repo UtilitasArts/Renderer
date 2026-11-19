@@ -1,9 +1,12 @@
 #include <iostream>
+#include <filesystem>
+#include <fstream>
+#include <SDL3/SDL.h>
 #include "mesh.h"
 #include "vector.h"
 #include "triangle.h"
 
-vec3_t mesh_vertices[N_MESH_VERTICES]= {
+vec3_t cube_vertices[N_CUBE_VERTICES]= {
     { .x = -1, .y = -1, .z = -1 }, // 1
     { .x = -1, .y =  1, .z = -1 }, // 2
     { .x =  1, .y =  1, .z = -1 }, // 3
@@ -14,7 +17,13 @@ vec3_t mesh_vertices[N_MESH_VERTICES]= {
     { .x = -1, .y = -1, .z =  1 }  // 8
 };
 
-face_t mesh_faces[N_MESH_FACES] = {
+    //----------------------------------------------------------------------------//
+   // Each face has vertex id's, We use those Id's to grab the vertex data       //
+  // Keep in Mind that each Vertex is 1 higher than it's actual array version,  //
+ // Because those start at 0.                                                  //
+//============================================================================// 
+
+face_t cube_faces[N_CUBE_FACES] = {
     // front
     { .a = 1, .b = 2, .c = 3 },
     { .a = 1, .b = 3, .c = 4 },
@@ -34,3 +43,33 @@ face_t mesh_faces[N_MESH_FACES] = {
     { .a = 6, .b = 8, .c = 1 },
     { .a = 6, .b = 1, .c = 4 }
 };
+
+mesh_t mesh{};
+
+void load_cube_mesh_data(){
+    for(int i = 0; i < N_CUBE_VERTICES; i++ ){
+        mesh.vertices.push_back(cube_vertices[i]);
+
+    }
+    for(int i = 0; i < N_CUBE_FACES; i++ ){
+        mesh.faces.push_back(cube_faces[i]);
+
+    }
+}
+
+void load_obj_file_data(const char *filename) {
+    namespace fs = std::filesystem;
+
+    fs::path instalFolder = SDL_GetBasePath();
+    std::cout << instalFolder;
+    // std::fstream File;
+
+    // File.open(filename);
+
+
+
+    // Read the contents of the .obj file
+    // load the vertices and faces and store them in our mesh-vector-arrays.
+}
+
+

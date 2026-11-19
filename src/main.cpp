@@ -3,6 +3,7 @@
 #include <SDL3/SDL.h>
 #include <cmath>
 #include <numbers>
+#include <vector>
 
 #include "timer.h"
 #include "display.h"
@@ -14,12 +15,14 @@
  // Global Variables //
 //==================//
 Timer::TimeStepManager time_manager;
-triangle_t triangles_to_render[N_MESH_FACES];
+std::vector<triangle_t> triangles_to_render;
+
   //--------//
  // Camera //
 //========//
 vec3_t camera_position = {0,0,-5};
 vec3_t cube_rotation   = {0,0,0};
+
 float  fov_factor      = 640.f;
 
 bool is_running = false;
@@ -32,6 +35,9 @@ void Setup(void) {
     frame_buffer_texture = SDL_CreateTexture(renderer,SDL_PIXELFORMAT_ARGB8888,SDL_TEXTUREACCESS_STREAMING,window_width,window_height);
     
     time_manager.Start();    
+
+    load_cube_mesh_data();
+    load_obj_file_data("gg");
 }
 
   //--------//
@@ -54,7 +60,7 @@ void ProcessInput(void) {
 
   //---------//
  // Project //
-//========//
+//=========//
 vec2_t Project(vec3_t point ){
     vec2_t projected_point = { 
     .x= fov_factor * point.x / point.z,
@@ -70,36 +76,50 @@ vec2_t Project(vec3_t point ){
 void Update(void) {
     using namespace std::numbers; 
     // cube_rotation.x += (2*pi) / 10.0  * time_manager.fixed_dt;  
-    cube_rotation.y += (2*pi) / 10.0   * time_manager.fixed_dt; 
-    cube_rotation.z += (2*pi) / 3.0    * time_manager.fixed_dt; 
+    mesh.rotation.y += (2*pi) / 10.0   * time_manager.fixed_dt; 
+    mesh.rotation.z += (2*pi) / 30.0   * time_manager.fixed_dt; 
 
-      //------------------------------------------------//
-     // Loop over all the faces or our cubed-mesh      // 
-    //================================================// 
-    for(int32_t i = 0; i < N_MESH_FACES; i++){
-        face_t mesh_face = mesh_faces[i];
+      //--------------------------------------//
+     // Loop over all the faces or our mesh  // 
+    //======================================// 
+    for(int32_t i = 0; i < mesh.faces.size(); i++){
+        face_t cube_face = mesh.faces[i];
         
+          //----------------------------------------------------------------------//
+         // Each face has vertex id's, We use those Id's to grab the vertex data // 
+        //======================================================================// 
         vec3_t face_vertices[3];
-        face_vertices[0] = mesh_vertices[mesh_face.a -1];
-        face_vertices[1] = mesh_vertices[mesh_face.b -1];
-        face_vertices[2] = mesh_vertices[mesh_face.c -1];
+        face_vertices[1] = mesh.vertices[cube_face.b -1];
+        face_vertices[0] = mesh.vertices[cube_face.a -1];
+        face_vertices[2] = mesh.vertices[cube_face.c -1];
 
         triangle_t projected_triangle;
-
+          //-------------------------------------------------------------------//
+         // Loop over all the vertices of our face and transform & project it // 
+        //===================================================================//         
         for (int32_t j = 0; j < 3; j++){
+              //--------------------//
+             // Transform Vertices // 
+            //====================// 
             vec3_t transformed_vertex = face_vertices[j];
-            transformed_vertex    = vec3_rotate(transformed_vertex,cube_rotation);
+            transformed_vertex    = vec3_rotate(transformed_vertex,mesh.rotation);
             transformed_vertex.z -= camera_position.z;
-
-            vec2_t projected_point = Project(transformed_vertex);
             
+              //------------------//
+             // Project Vertices // 
+            //==================//
+            vec2_t projected_point = Project(transformed_vertex);   
+
+              //-----------------------------------------------//
+             // Translate Projected Vertices To Center Screen // 
+            //===============================================//
             projected_point.x  += window_width/2;
             projected_point.y  += window_height/2;
             
-            projected_triangle.points[j] = projected_point;
+            projected_triangle.points[j] = projected_point;            
         }
 
-        triangles_to_render[i] = projected_triangle;
+        triangles_to_render.push_back(projected_triangle);    
     }  
 }
 
@@ -107,35 +127,15 @@ void Update(void) {
  // Render //
 //========//
 void Render(void) { 
-   draw_dots();
+   draw_dots(); 
    
-//    draw_line(100,500,700,0,1,col_select(255,255,255,255));
-//    draw_line(100,500,1500,600,1,col_select(255,255,255,255));
-
-   for(int i = 0; i < N_MESH_FACES; i++) {
-        triangle_t triangle = triangles_to_render[i];  
-        uint32_t color = col_select(255,255,0,255); 
-        
-        draw_line(triangle.points[0].x,
-                  triangle.points[0].y,
-                  triangle.points[1].x,
-                  triangle.points[1].y, 3, col_select(255,255,0,255));
-
-        draw_line(triangle.points[1].x,
-                  triangle.points[1].y,
-                  triangle.points[2].x,
-                  triangle.points[2].y, 3,col_select(255,0,255,255));
-
-        draw_line(triangle.points[2].x,
-                  triangle.points[2].y,
-                  triangle.points[0].x,
-                  triangle.points[0].y, 3,col_select(0,255,255,255));
-                  
-
-        draw_pixel(triangle.points[0].x ,triangle.points[0].y, 5, color);
-        draw_pixel(triangle.points[1].x ,triangle.points[1].y, 5, color);
-        draw_pixel(triangle.points[2].x ,triangle.points[2].y, 5, color); 
+   for(int i = 0; i < triangles_to_render.size(); i++) {
+        triangle_t triangle = triangles_to_render[i];
+        uint32_t color = col_select(255,255,0,255);         
+        draw_triangle(triangle, 1, color, true);
    }
+   
+   triangles_to_render.clear();
 
     render_frame_buffer();  
     clear_frame_buffer(0xFF000000);

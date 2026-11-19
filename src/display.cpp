@@ -88,7 +88,6 @@ void draw_dots() {
   //----------------//
  // Drawing Pixels //
 //================//
-
 void draw_pixel(int32_t x, int32_t y, int32_t r, uint32_t color) {   
     if(r > 1)
     {
@@ -162,8 +161,7 @@ void draw_line_high_angle(int32_t x0, int32_t y0, int32_t x1, int32_t y1, int32_
     int D  = 2*dx - dy;
     int x  = x0;
 
-    for(int y = y0; y <= y1 ;y++){
-        
+    for(int y = y0; y <= y1 ;y++){        
         draw_pixel(x, y, r, color);
         if (D > 0){
             x = x + xi;
@@ -184,11 +182,47 @@ void draw_line(int32_t x0, int32_t y0, int32_t x1, int32_t y1, int32_t r, uint32
         draw_line_high_angle(x0, y0, x1, y1,r,color);
 
     }
-}    
+}
 
   //----------------//
  // Drawing Shapes //
 //================//
+void draw_triangle(triangle_t& triangle, int32_t r, uint32_t color, bool verts){
+    draw_line(triangle.points[0].x,
+              triangle.points[0].y,
+              triangle.points[1].x,
+              triangle.points[1].y, r, color);
+
+    draw_line(triangle.points[1].x,
+              triangle.points[1].y,
+              triangle.points[2].x,
+              triangle.points[2].y, r,color);
+
+    draw_line(triangle.points[2].x,
+              triangle.points[2].y,
+              triangle.points[0].x,
+              triangle.points[0].y, r,color);
+                
+    if(verts){
+        draw_pixel(triangle.points[0].x ,triangle.points[0].y, 5, color);
+        draw_pixel(triangle.points[1].x ,triangle.points[1].y, 5, color);
+        draw_pixel(triangle.points[2].x ,triangle.points[2].y, 5, color); 
+    }
+}
+
+void draw_triangle(int x0, int y0, int x1, int y1, int x2, int y2, int32_t r, uint32_t color, bool verts){
+    draw_line(x0,y0,x1,y1,r,color);
+    draw_line(x1,y1,x2,y2,r,color);
+    draw_line(x2,y2,x0,y0,r,color);
+
+    if(verts){
+        draw_pixel(x0 ,y0, 5, color);
+        draw_pixel(x1 ,y1, 5, color);
+        draw_pixel(x2 ,y2, 5, color);
+    }
+}
+
+
 void draw_rect(uint32_t x, uint32_t y, uint32_t w, uint32_t h, uint32_t color) {
     for(uint32_t i = 0; i < w; i++) {
         for(uint32_t j = 0; j < h; j++) {
