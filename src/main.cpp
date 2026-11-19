@@ -37,7 +37,7 @@ void Setup(void) {
     time_manager.Start();    
 
     load_cube_mesh_data();
-    load_obj_file_data("gg");
+    load_obj_file_data("RubberToyTriangulated");
 }
 
   //--------//

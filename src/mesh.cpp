@@ -60,8 +60,19 @@ void load_cube_mesh_data(){
 void load_obj_file_data(const char *filename) {
     namespace fs = std::filesystem;
 
-    fs::path instalFolder = SDL_GetBasePath();
-    std::cout << instalFolder;
+    fs::path Folder = SDL_GetBasePath();
+    while(Folder.parent_path().filename().string() != "Renderer"){
+        Folder = Folder.parent_path();
+    }
+    
+    fs::path FilePath = Folder.parent_path().string() + "/assets/" + std::string(filename) + ".obj";  
+
+    if(FilePath.has_filename()) {
+        std::cout << "File Name: " << FilePath.filename().string() << std::endl;
+    }
+
+    
+
     // std::fstream File;
 
     // File.open(filename);
