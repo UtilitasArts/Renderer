@@ -34,9 +34,7 @@ void Setup(void) {
     frame_buffer = new uint32_t[window_width * window_height];
     frame_buffer_texture = SDL_CreateTexture(renderer,SDL_PIXELFORMAT_ARGB8888,SDL_TEXTUREACCESS_STREAMING,window_width,window_height);
     
-    
-
-    // load_cube_mesh_data();
+        // load_cube_mesh_data();
     load_obj_file_data("RubberToyTriangulated");
 
     time_manager.Start();   

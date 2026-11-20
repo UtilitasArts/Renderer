@@ -1,3 +1,4 @@
+#include <iostream>
 #include "Timer.h"
 
   //--------/
@@ -25,9 +26,11 @@ void Timer::Timer::Start(){
 
 void Timer::TimeStepManager::MeasureTimeStep(){      
     FrameTime      = FrameTimer.GetElapsedNanoSeconds(true); 
-    if (FrameTime >= MaxFrameTime) {          
-        FrameTime  = MaxFrameTime;
+    if (FrameTime >= MaxFrameTime) {                
+        std::cout << "Max_Frame_time" << (WorldTimer.GetElapsedSeconds() - GetFixedTimeSeconds() )  << std::endl;        
+        FrameTime  = MaxFrameTime;     
     }     
+
     Accumulator += FrameTime;   
 }
 
