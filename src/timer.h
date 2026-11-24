@@ -10,7 +10,7 @@ static constexpr uint64_t NanoSecond    = 1'000'000'000;
             void      Start();
             
         private:
-            std::chrono::steady_clock::time_point start_time;
+            std::chrono::high_resolution_clock::time_point start_time;
     };
 
     class TimeStepManager{

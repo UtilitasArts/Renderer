@@ -129,12 +129,9 @@ void Update(void) {
  // Render //
 //========//
 void Render(void) { 
-   draw_dots(); 
-   
-   if(triangles_to_render.size() <= 0)
-   {
-    std::cout << "No Triangles To Render \n";
-   }
+   clear_frame_buffer(0xFF000000);
+
+   draw_dots();  
 
    for(int i = 0; i < triangles_to_render.size(); i++) {
         triangle_t triangle = triangles_to_render[i];
@@ -145,7 +142,6 @@ void Render(void) {
    triangles_to_render.resize(0);
 
     render_frame_buffer();  
-    clear_frame_buffer(0xFF000000);
     SDL_RenderPresent(renderer);
 }
 
@@ -155,10 +151,9 @@ void Render(void) {
 int main(void) {      
     is_running = InitializeWindow();
     Setup();  
-           
+
     while(is_running){       
         time_manager.MeasureTimeStep();
-
         ProcessInput();  
         while(time_manager.IncTimeStep()){ 
             Update();    

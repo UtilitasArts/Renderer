@@ -6,7 +6,7 @@
 //========/
 
 uint64_t Timer::Timer::GetElapsedNanoSeconds(bool reset) {
-    auto current_time = std::chrono::steady_clock::now();              
+    auto current_time = std::chrono::high_resolution_clock::now();              
     std::chrono::nanoseconds duration = (current_time - start_time);
     if(reset) start_time = current_time;
     return duration.count();
@@ -17,7 +17,7 @@ double Timer::Timer::GetElapsedSeconds(bool bPrint){
     return elapsedSeconds;
 }
 void Timer::Timer::Start(){
-    start_time = std::chrono::steady_clock::now();
+    start_time = std::chrono::high_resolution_clock::now();
 }
 
   //--------------------/
