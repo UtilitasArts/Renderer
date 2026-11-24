@@ -23,10 +23,9 @@ void Timer::Timer::Start(){
   //--------------------/
  // Time Step Manager /
 //==================/
-
 void Timer::TimeStepManager::MeasureTimeStep(){      
     FrameTime      = FrameTimer.GetElapsedNanoSeconds(true); 
-    if (FrameTime >= MaxFrameTime) {                
+    if (FrameTime > MaxFrameTime) {                
         std::cout << "Max_Frame_time" << (WorldTimer.GetElapsedSeconds() - GetFixedTimeSeconds() )  << std::endl;        
         FrameTime  = MaxFrameTime;     
     }     
@@ -38,7 +37,7 @@ bool Timer::TimeStepManager::IncTimeStep(){
     if(Accumulator >= TimeStep){
         FrameCount  += 1;
         FixedTime   += TimeStep;
-        Accumulator -= TimeStep;        
+        Accumulator -= TimeStep;
         return true;
     }   else {
         Alpha = double(Accumulator)/double(TimeStep);

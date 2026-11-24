@@ -137,7 +137,7 @@ void Render(void) {
         draw_triangle(triangle, 1, color);
    }
    
-   triangles_to_render.clear();
+   triangles_to_render.resize(0);
 
     render_frame_buffer();  
     clear_frame_buffer(0xFF000000);
@@ -150,13 +150,16 @@ void Render(void) {
 int main(void) {      
     is_running = InitializeWindow();
     Setup();              
-    while(is_running){          
+    while(is_running){       
         time_manager.MeasureTimeStep();
+
+        ProcessInput();  
+
         while(time_manager.IncTimeStep()){ 
-            ProcessInput();  
-            Update();                       
-            Render();   
-        }   
+            Update();    
+        }     
+
+        Render();  
     }
 
     DestroyWindow(); 

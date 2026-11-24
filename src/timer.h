@@ -29,7 +29,7 @@ static constexpr uint64_t NanoSecond    = 1'000'000'000;
             uint64_t FrameCount  = 0;
             uint64_t FrameTime   = 0;
             double   Alpha       = 0; 
-
+        
             static constexpr uint64_t FPS           = 60;            
             static constexpr uint64_t TimeStep      = NanoSecond/FPS;  
             static constexpr uint64_t MaxFrameTime  = TimeStep * 25;

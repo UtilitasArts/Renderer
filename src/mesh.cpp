@@ -90,8 +90,7 @@ void load_obj_file_data(const char *filename) {
     std::smatch f_match; 
 
     while(std::getline(File,Content)) {
-
-        // std::cout << Content << std::endl;
+        
         std::regex_search(Content, type_match,type_pattern);
 
         if (type_match[0]=="v"){
@@ -99,7 +98,7 @@ void load_obj_file_data(const char *filename) {
             std::regex_search(Content, v_match ,v_pattern);
 
             if (v_match.size() == 4){
-                // std::cout << Match2[1].str() << Match2[2].str() << Match2[3].str() << std::endl ;
+              
                 float x = std::stof(v_match[1].str());
                 float y = std::stof(v_match[2].str());
                 float z = std::stof(v_match[3].str());  
@@ -111,8 +110,7 @@ void load_obj_file_data(const char *filename) {
         if (type_match[0] == "f"){
             std::regex_search(Content, f_match ,f_pattern);
 
-            if (f_match.size() == 10){
-                // std::cout << Match2[1].str() << Match2[2].str() << Match2[3].str() << std::endl ;
+            if (f_match.size() == 10){              
                 int v1 = std::stoi(f_match[1].str());
                 int v2 = std::stoi(f_match[4].str());
                 int v3 = std::stoi(f_match[7].str());  
