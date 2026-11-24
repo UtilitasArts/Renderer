@@ -131,6 +131,11 @@ void Update(void) {
 void Render(void) { 
    draw_dots(); 
    
+   if(triangles_to_render.size() <= 0)
+   {
+    std::cout << "No Triangles To Render \n";
+   }
+
    for(int i = 0; i < triangles_to_render.size(); i++) {
         triangle_t triangle = triangles_to_render[i];
         uint32_t color = col_select(255,255,0,255);         
@@ -149,16 +154,15 @@ void Render(void) {
 //===============//
 int main(void) {      
     is_running = InitializeWindow();
-    Setup();              
+    Setup();  
+           
     while(is_running){       
         time_manager.MeasureTimeStep();
 
         ProcessInput();  
-
         while(time_manager.IncTimeStep()){ 
             Update();    
-        }     
-
+        }  
         Render();  
     }
 
