@@ -79,7 +79,7 @@ void Update(void) {
     using namespace std::numbers; 
 
     triangles_to_render.resize(0);   
-    
+
     // cube_rotation.x += (2*pi) / 10.0  * time_manager.fixed_dt;  
     mesh.rotation.y += (2*pi) / 10.0   * time_manager.fixed_dt; 
     // mesh.rotation.z += (2*pi) / 5.0   * time_manager.fixed_dt; 
@@ -140,9 +140,7 @@ void Render(void) {
         triangle_t triangle = triangles_to_render[i];
         uint32_t color = col_select(255,255,0,255);         
         draw_triangle(triangle, 1, color);
-   }
-
-  
+   }  
 
     render_frame_buffer();  
     SDL_RenderPresent(renderer);
@@ -161,6 +159,7 @@ int main(void) {
         while(time_manager.IncTimeStep()){ 
             Update();    
         }  
+        
         Render();  
     }
 

@@ -81,53 +81,31 @@ void load_obj_file_data(const char *filename) {
 
     std::string Content;
 
-    std::regex type_pattern{"v|f"};   
-    std::regex v_pattern{"v (.*) (.*) (.*)"}; 
-    std::regex f_pattern{"f (\\d*)/(\\d*)/(\\d*) (\\d*)/(\\d*)/(\\d*) (\\d*)/(\\d*)/(\\d*)"}; 
+    std::regex v_pattern{R"(^v (.*) (.*) (.*))"}; 
+    std::regex f_pattern{R"(^f (\d*)/(\d*)/(\d*) (\d*)/(\d*)/(\d*) (\d*)/(\d*)/(\d*))"}; 
 
-    std::smatch type_match; 
-    std::smatch v_match; 
-    std::smatch f_match; 
+    std::smatch match; 
 
-    while(std::getline(File,Content)) {
-        
-        std::regex_search(Content, type_match,type_pattern);
-
-        if (type_match[0]=="v"){
-           
-            std::regex_search(Content, v_match ,v_pattern);
-
-            if (v_match.size() == 4){
-              
-                float x = std::stof(v_match[1].str());
-                float y = std::stof(v_match[2].str());
-                float z = std::stof(v_match[3].str());  
+    while(std::getline(File,Content)) {           
+        if (std::regex_search(Content, match ,v_pattern)){              
+                float x = std::stof(match[1].str());
+                float y = std::stof(match[2].str());
+                float z = std::stof(match[3].str());  
 
                 vec3_t vertex{.x = x, .y = y,.z = z};
-                mesh.vertices.push_back(vertex);
-            }
+                mesh.vertices.push_back(vertex);                
         }
-        if (type_match[0] == "f"){
-            std::regex_search(Content, f_match ,f_pattern);
-
-            if (f_match.size() == 10){              
-                int v1 = std::stoi(f_match[1].str());
-                int v2 = std::stoi(f_match[4].str());
-                int v3 = std::stoi(f_match[7].str());  
+        if (std::regex_search(Content, match ,f_pattern)){   
+                int v1 = std::stoi(match[1].str());
+                int v2 = std::stoi(match[4].str());
+                int v3 = std::stoi(match[7].str());  
 
                 face_t face{.a = v1, .b = v2, .c = v3};
-                mesh.faces.push_back(face);          
-            }
+                mesh.faces.push_back(face);      
         }         
-    }
-    
+    }    
 
     File.close();
-
-
-
-    // Read the contents of the .obj file
-    // load the vertices and faces and store them in our mesh-vector-arrays.
 }
 
 
