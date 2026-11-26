@@ -67,81 +67,82 @@ void load_obj_file_data(const char *filename) {
         Folder = Folder.parent_path();
     }
     
-    fs::path FilePath = Folder.parent_path().string() + "/assets/" + std::string(filename) + ".obj";  
+    fs::path FilePath = Folder.parent_path().string() + R"(\assets\)" + std::string(filename) + ".obj";  
 
     if(!FilePath.has_filename()) {
         std::cout << "No such file In Asset Folder: " << std::endl;       
         return;
     }
     else{
-         std::cout << "File Name: " << FilePath.filename().string() << std::endl;
+         std::cout << "File Name: " << FilePath.string() << std::endl;
     }
 
-    std::ifstream File;    
-    File.open(FilePath);
-    
 
-    // std::string Content;
-    std::string Type;  
+    std::string filepath = FilePath.string();
 
-    // while(std::getline(File,Content)) {            
-    //     File >> Type;
+    // FILE* file;
+    // file = fopen(filepath.c_str(), "r");
+    // char line[1024];
 
-    //     if(Type == "v"){
-    //         float x,y,z;
-    //         File >> x >> y >> z;
-    //         vec3_t vertex{.x = x, .y = y,.z = z};
-    //         mesh.vertices.push_back(vertex);  
+    // while(fgets(line,1024,file)) {   
+    //     if(strncmp(line,"v ",2) == 0)	{
+    //         // printf("Line = %s", line);
+    //         vec3_t vertex;
+    //         sscanf(line,"v %f %f %f", &vertex.x,&vertex.y,&vertex.z); 
+    //         mesh.vertices.push_back(vertex); 
     //     }
-    //     if(Type == "f"){
-    //         int v1, b, c, v2, e, f, v3, h, i;
+    //     if(strncmp(line,"f ",2) == 0)	{
+    //         // printf("Line = %s", line);
+    //         int vertex_indices[3];
+    //         int texture_indices[3];
+    //         int normal_indices[3];	
 
-    //         File >> v1; File.ignore(1);
-    //         File >> b;  File.ignore(1);
-    //         File >> c;  File.ignore(1);
-    //         File >> v2; File.ignore(1);
-    //         File >> e;  File.ignore(1);
-    //         File >> f;  File.ignore(1);
-    //         File >> v3; File.ignore(1);
-    //         File >> h;  File.ignore(1);
-    //         File >> i;               
-            
-    //         face_t face{.a = v1, .b = v2, .c = v3};
-    //         mesh.faces.push_back(face); 
-    //     }   
-    // } 
-    
+    //         sscanf(line,"f %d/%d/%d %d/%d/%d %d/%d/%d",     
+    //         &vertex_indices[0],&texture_indices[0],&normal_indices[0],
+    //         &vertex_indices[1],&texture_indices[1],&normal_indices[1],
+    //         &vertex_indices[2],&texture_indices[2],&normal_indices[2]
+    //         );
 
-    while(true){        
-        File >> Type;
+    //         face_t face{ .a = vertex_indices[0],
+    //                      .b = vertex_indices[1],
+    //                      .c = vertex_indices[2]
+    //                     };
 
-        if(File.eof()) {
-            return;
+    //         mesh.faces.push_back(face);
+    //     }
+    // }
+
+    std::ifstream File;    
+    File.open(FilePath);    
+    std::string Type;  
+    char line[512];
+
+    while(File.getline(line,sizeof(line))) {                
+        if(strncmp(line,"v ",2) == 0)	{
+            // printf("Line = %s", line);
+            vec3_t vertex;
+            sscanf(line,"v %f %f %f", &vertex.x,&vertex.y,&vertex.z); 
+            mesh.vertices.push_back(vertex); 
         }
+        else if(strncmp(line,"f ",2) == 0)	{
+            // printf("Line = %s", line);
+            int vertex_indices[3];
+            int texture_indices[3];
+            int normal_indices[3];	
 
-        if(Type == "v"){
-            float x,y,z;
-            File >> x >> y >> z;
-            vec3_t vertex{.x = x, .y = y,.z = z};
-            mesh.vertices.push_back(vertex);  
-        }
-        if(Type == "f"){
-            int v1, b, c, v2, e, f, v3, h, i;
-            File >> v1; File.ignore(1);
-            File >> b;  File.ignore(1);
-            File >> c;  File.ignore(1);
-            File >> v2; File.ignore(1);
-            File >> e;  File.ignore(1);
-            File >> f;  File.ignore(1);
-            File >> v3; File.ignore(1);
-            File >> h;  File.ignore(1);
-            File >> i;               
-            
-            face_t face{.a = v1, .b = v2, .c = v3};
-            mesh.faces.push_back(face); 
-        }
+            sscanf(line,"f %d/%d/%d %d/%d/%d %d/%d/%d",     
+            &vertex_indices[0],&texture_indices[0],&normal_indices[0],
+            &vertex_indices[1],&texture_indices[1],&normal_indices[1],
+            &vertex_indices[2],&texture_indices[2],&normal_indices[2]
+            );
 
-        File.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); 
+            face_t face{ .a = vertex_indices[0],
+                         .b = vertex_indices[1],
+                         .c = vertex_indices[2]
+                        };
+
+            mesh.faces.push_back(face);
+        }
     }
 
     File.close();
