@@ -3,6 +3,7 @@
 #include <fstream>
 #include <regex>
 #include <SDL3/SDL.h>
+#include <limits>
 #include "mesh.h"
 #include "vector.h"
 #include "triangle.h"
@@ -78,12 +79,45 @@ void load_obj_file_data(const char *filename) {
 
     std::ifstream File;    
     File.open(FilePath);
+    
 
-    std::string Content;
+    // std::string Content;
     std::string Type;  
 
-    while(std::getline(File,Content)) {            
+    // while(std::getline(File,Content)) {            
+    //     File >> Type;
+
+    //     if(Type == "v"){
+    //         float x,y,z;
+    //         File >> x >> y >> z;
+    //         vec3_t vertex{.x = x, .y = y,.z = z};
+    //         mesh.vertices.push_back(vertex);  
+    //     }
+    //     if(Type == "f"){
+    //         int v1, b, c, v2, e, f, v3, h, i;
+
+    //         File >> v1; File.ignore(1);
+    //         File >> b;  File.ignore(1);
+    //         File >> c;  File.ignore(1);
+    //         File >> v2; File.ignore(1);
+    //         File >> e;  File.ignore(1);
+    //         File >> f;  File.ignore(1);
+    //         File >> v3; File.ignore(1);
+    //         File >> h;  File.ignore(1);
+    //         File >> i;               
+            
+    //         face_t face{.a = v1, .b = v2, .c = v3};
+    //         mesh.faces.push_back(face); 
+    //     }   
+    // } 
+    
+
+    while(true){        
         File >> Type;
+
+        if(File.eof()) {
+            return;
+        }
 
         if(Type == "v"){
             float x,y,z;
@@ -93,16 +127,22 @@ void load_obj_file_data(const char *filename) {
         }
         if(Type == "f"){
             int v1, b, c, v2, e, f, v3, h, i;
-            char slash;
-
-            File >> v1 >> slash >> b >> slash >> c
-                 >> v2 >> slash >> e >> slash >> f
-                 >> v3 >> slash >> h >> slash >> i;
+            File >> v1; File.ignore(1);
+            File >> b;  File.ignore(1);
+            File >> c;  File.ignore(1);
+            File >> v2; File.ignore(1);
+            File >> e;  File.ignore(1);
+            File >> f;  File.ignore(1);
+            File >> v3; File.ignore(1);
+            File >> h;  File.ignore(1);
+            File >> i;               
             
             face_t face{.a = v1, .b = v2, .c = v3};
-            mesh.faces.push_back(face);            
-        }   
-    }        
+            mesh.faces.push_back(face); 
+        }
+
+        File.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); 
+    }
 
     File.close();
 }
