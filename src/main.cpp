@@ -34,7 +34,6 @@ void Setup(void) {
     frame_buffer = new uint32_t[window_width * window_height];
     frame_buffer_texture = SDL_CreateTexture(renderer,SDL_PIXELFORMAT_ARGB8888,SDL_TEXTUREACCESS_STREAMING,window_width,window_height);
     
-        // load_cube_mesh_data();
     load_obj_file_data("RubberToyTriangulated");
 
     time_manager.Start();   
@@ -82,7 +81,7 @@ void Update(void) {
 
     // cube_rotation.x += (2*pi) / 10.0  * time_manager.fixed_dt;  
     mesh.rotation.y += (2*pi) / 10.0   * time_manager.fixed_dt; 
-    // mesh.rotation.z += (2*pi) / 5.0   * time_manager.fixed_dt; 
+    mesh.rotation.z += (2*pi) / 5.0   * time_manager.fixed_dt; 
 
       //--------------------------------------//
      // Loop over all the faces or our mesh  // 

@@ -76,7 +76,7 @@ void load_obj_file_data(const char *filename) {
     else{
          std::cout << "File Name: " << FilePath.string() << std::endl;
     }
-
+    
     std::ifstream File;    
     File.open(FilePath);    
     std::string Type;  
