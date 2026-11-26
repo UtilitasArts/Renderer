@@ -63,11 +63,14 @@ void load_obj_file_data(const char *filename) {
     namespace fs = std::filesystem;
 
     fs::path Folder = SDL_GetBasePath();
-    while(Folder.parent_path().filename().string() != "Renderer"){
+    while(Folder.filename().string() != "Renderer"){
         Folder = Folder.parent_path();
     }
     
-    fs::path FilePath = Folder.parent_path().string() + R"(\assets\)" + std::string(filename) + ".obj";  
+    fs::path FilePath = Folder/"assets"/ (std::string(filename) + ".obj");  
+    // FilePath /= "assets";
+    // FilePath /= 
+
 
     if(!FilePath.has_filename()) {
         std::cout << "No such file In Asset Folder: " << std::endl;       
@@ -79,6 +82,8 @@ void load_obj_file_data(const char *filename) {
 
 
     std::string filepath = FilePath.string();
+
+
 
     // FILE* file;
     // file = fopen(filepath.c_str(), "r");
@@ -117,7 +122,8 @@ void load_obj_file_data(const char *filename) {
     std::string Type;  
     char line[512];
 
-    while(File.getline(line,sizeof(line))) {                
+    while(File.getline(line,sizeof(line))) {   
+                     
         if(strncmp(line,"v ",2) == 0)	{
             // printf("Line = %s", line);
             vec3_t vertex;

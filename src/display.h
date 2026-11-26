@@ -32,4 +32,3 @@ void draw_triangle(int x0, int y0, int x1, int y1, int x2, int y2, int32_t r, ui
 void draw_rect(uint32_t x, uint32_t y, uint32_t w, uint32_t h, uint32_t color);
 void draw_circle(int32_t posx, int32_t posy, int32_t r, int32_t width);
 
-
