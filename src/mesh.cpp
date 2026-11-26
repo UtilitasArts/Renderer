@@ -80,30 +80,29 @@ void load_obj_file_data(const char *filename) {
     File.open(FilePath);
 
     std::string Content;
+    std::string Type;  
 
-    std::regex v_pattern{R"(^v (.*) (.*) (.*))"}; 
-    std::regex f_pattern{R"(^f (\d*)/(\d*)/(\d*) (\d*)/(\d*)/(\d*) (\d*)/(\d*)/(\d*))"}; 
+    while(std::getline(File,Content)) {            
+        File >> Type;
 
-    std::smatch match; 
-
-    while(std::getline(File,Content)) {           
-        if (std::regex_search(Content, match ,v_pattern)){              
-                float x = std::stof(match[1].str());
-                float y = std::stof(match[2].str());
-                float z = std::stof(match[3].str());  
-
-                vec3_t vertex{.x = x, .y = y,.z = z};
-                mesh.vertices.push_back(vertex);                
+        if(Type == "v"){
+            float x,y,z;
+            File >> x >> y >> z;
+            vec3_t vertex{.x = x, .y = y,.z = z};
+            mesh.vertices.push_back(vertex);  
         }
-        if (std::regex_search(Content, match ,f_pattern)){   
-                int v1 = std::stoi(match[1].str());
-                int v2 = std::stoi(match[4].str());
-                int v3 = std::stoi(match[7].str());  
+        if(Type == "f"){
+            int v1, b, c, v2, e, f, v3, h, i;
+            char slash;
 
-                face_t face{.a = v1, .b = v2, .c = v3};
-                mesh.faces.push_back(face);      
-        }         
-    }    
+            File >> v1 >> slash >> b >> slash >> c
+                 >> v2 >> slash >> e >> slash >> f
+                 >> v3 >> slash >> h >> slash >> i;
+            
+            face_t face{.a = v1, .b = v2, .c = v3};
+            mesh.faces.push_back(face);            
+        }   
+    }        
 
     File.close();
 }
