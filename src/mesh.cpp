@@ -62,17 +62,11 @@ void load_obj_file_data(const char *filename) {
     namespace fs = std::filesystem;
 
     fs::path Folder = SDL_GetBasePath();
+    while(Folder.parent_path().filename().string() != "Renderer"){
+        Folder = Folder.parent_path();
+    }
     
-    std::regex  HomeFolder{R"((.*)(Renderer).*)"};  
-    std::smatch FolderMatch;
-    std::string AssetFolder;
-    
-    std::string FolderStr = Folder.string();
-    if(std::regex_search(FolderStr,FolderMatch,HomeFolder)) {       
-        AssetFolder = FolderMatch[1].str() + FolderMatch[2].str() + R"(\assets\)";
-    }  
-    
-    fs::path FilePath = AssetFolder + std::string(filename) + ".obj";  
+    fs::path FilePath = Folder.parent_path().string() + "/assets/" + std::string(filename) + ".obj";  
 
     if(!FilePath.has_filename()) {
         std::cout << "No such file In Asset Folder: " << std::endl;       
@@ -108,7 +102,7 @@ void load_obj_file_data(const char *filename) {
             face_t face{.a = v1, .b = v2, .c = v3};
             mesh.faces.push_back(face);            
         }   
-    } 
+    }        
 
     File.close();
 }
