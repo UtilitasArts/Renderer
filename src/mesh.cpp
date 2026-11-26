@@ -63,7 +63,7 @@ void load_obj_file_data(const char *filename) {
 
     fs::path Folder = SDL_GetBasePath();
     
-    std::regex  HomeFolder{R"((.*)(Renderer)(.*))"};  
+    std::regex  HomeFolder{R"((.*)(Renderer).*)"};  
     std::smatch FolderMatch;
     std::string AssetFolder;
     
