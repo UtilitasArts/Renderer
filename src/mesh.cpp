@@ -67,10 +67,7 @@ void load_obj_file_data(const char *filename) {
         Folder = Folder.parent_path();
     }
     
-    fs::path FilePath = Folder/"assets"/ (std::string(filename) + ".obj");  
-    // FilePath /= "assets";
-    // FilePath /= 
-
+    fs::path FilePath = Folder/"assets"/ (std::string(filename) + ".obj"); 
 
     if(!FilePath.has_filename()) {
         std::cout << "No such file In Asset Folder: " << std::endl;       
@@ -79,43 +76,6 @@ void load_obj_file_data(const char *filename) {
     else{
          std::cout << "File Name: " << FilePath.string() << std::endl;
     }
-
-
-    std::string filepath = FilePath.string();
-
-
-
-    // FILE* file;
-    // file = fopen(filepath.c_str(), "r");
-    // char line[1024];
-
-    // while(fgets(line,1024,file)) {   
-    //     if(strncmp(line,"v ",2) == 0)	{
-    //         // printf("Line = %s", line);
-    //         vec3_t vertex;
-    //         sscanf(line,"v %f %f %f", &vertex.x,&vertex.y,&vertex.z); 
-    //         mesh.vertices.push_back(vertex); 
-    //     }
-    //     if(strncmp(line,"f ",2) == 0)	{
-    //         // printf("Line = %s", line);
-    //         int vertex_indices[3];
-    //         int texture_indices[3];
-    //         int normal_indices[3];	
-
-    //         sscanf(line,"f %d/%d/%d %d/%d/%d %d/%d/%d",     
-    //         &vertex_indices[0],&texture_indices[0],&normal_indices[0],
-    //         &vertex_indices[1],&texture_indices[1],&normal_indices[1],
-    //         &vertex_indices[2],&texture_indices[2],&normal_indices[2]
-    //         );
-
-    //         face_t face{ .a = vertex_indices[0],
-    //                      .b = vertex_indices[1],
-    //                      .c = vertex_indices[2]
-    //                     };
-
-    //         mesh.faces.push_back(face);
-    //     }
-    // }
 
     std::ifstream File;    
     File.open(FilePath);    
